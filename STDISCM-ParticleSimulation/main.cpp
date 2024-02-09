@@ -89,6 +89,16 @@ int main()
 	std::cout << "velocityX: " << velocityX;
 	std::cout << "velocityY: " << velocityY;
 
+	// Create the walls
+	sf::RectangleShape leftWall(sf::Vector2f(10.f, 600.f));
+	leftWall.setPosition(0.f, 0.f);
+	leftWall.setFillColor(sf::Color::Green);
+
+	sf::RectangleShape rightWall(sf::Vector2f(10.f, 600.f));
+	rightWall.setPosition(790.f, 0.f);
+	rightWall.setFillColor(sf::Color::Green);
+
+
 	// Main loop
 	while (window.isOpen())
 	{
@@ -116,11 +126,18 @@ int main()
 		if (ball.getPosition().y > window.getSize().y || ball.getPosition().y < 0)
 			velocityY = -velocityY;
 
+		if (ball.getGlobalBounds().intersects(leftWall.getGlobalBounds()) ||
+			ball.getGlobalBounds().intersects(rightWall.getGlobalBounds()))
+			velocityX = -velocityX;
+
 		// Clear the window
 		window.clear();
 
 		// Draw the ball
 		window.draw(ball);
+
+		window.draw(leftWall);
+		window.draw(rightWall);
 
 
 
