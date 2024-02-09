@@ -1,29 +1,3 @@
-//#include <SFML/Graphics.hpp>
-//
-//int main()
-//{
-//    sf::RenderWindow window(sf::VideoMode(1280, 720), "Particle Simulator");
-//    sf::CircleShape shape(100.f);
-//    shape.setFillColor(sf::Color::Green);
-//
-//    while (window.isOpen())
-//    {
-//        sf::Event event;
-//        while (window.pollEvent(event))
-//        {
-//            if (event.type == sf::Event::Closed)
-//                window.close();
-//        }
-//
-//        window.clear();
-//        window.draw(shape);
-//        window.display();
-//    }
-//
-//    return 0;
-//}
-
-
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <math.h>
@@ -76,7 +50,7 @@ int main()
 	std::chrono::high_resolution_clock::time_point end;
 
 
-	auto lastDrawTime = std::chrono::steady_clock::now();
+	auto lastFPSDrawTime = std::chrono::steady_clock::now();
 	const std::chrono::milliseconds interval(500); // 0.5 seconds
 	FPS fps;
 
@@ -106,7 +80,7 @@ int main()
 	float angle = deg * PI / 180;
 
 	// set the speed of the ball
-	float speed = 1.0f;
+	float speed = 10.0f;
 	
 	// set the velocity of the ball based on angle and speed
 	float velocityX = speed * cos(angle);
@@ -118,8 +92,8 @@ int main()
 	// Main loop
 	while (window.isOpen())
 	{
-		auto currentTime = std::chrono::steady_clock::now();
-		auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - lastDrawTime);
+		auto currentFPSTime = std::chrono::steady_clock::now();
+		auto elapsedFPSTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentFPSTime - lastFPSDrawTime);
 
 	
 	// Process events
@@ -151,14 +125,11 @@ int main()
 
 
 		fps.update();
-		/*fpsText = std::to_string(fps.getFPS());*/
 
-		
-
-		if (elapsedTime >= interval) {
+		if (elapsedFPSTime >= interval) {
 			// Update last draw time
-			lastDrawTime = currentTime;
-			fpsText.setString(std::to_string(fps.getFPS()));
+			lastFPSDrawTime = currentFPSTime;
+			fpsText.setString(std::to_string(fps.getFPS()) + " FPS");
 		}
 		window.draw(fpsText);
 		
