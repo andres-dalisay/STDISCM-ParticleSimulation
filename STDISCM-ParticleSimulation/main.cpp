@@ -306,7 +306,34 @@ void drawInputWindow(sf::RenderWindow& window, sf::Font& font)
         {
             if (inputEvent.type == sf::Event::Closed)
                 window.close();
+            if (inputEvent.type == sf::Event::MouseButtonPressed)
+            {
+                if (inputEvent.mouseButton.button == sf::Mouse::Left)
+                {
+                    sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
+                    if (button1.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePosition)))
+                    {
+                        std::cout << "Button 1 clicked" << std::endl;
+                    }
+                    if (button2.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePosition)))
+                    {
+                        std::cout << "Button 2 clicked" << std::endl;
+                    }
+                    if (button3.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePosition)))
+                    {
+                        std::cout << "Button 3 clicked" << std::endl;
+                    }
+                    if (buttonWall.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePosition)))
+                    {
+                        std::cout << "Button Wall clicked" << std::endl;
+                    }
+                }
+            }
 
+            //accept inputs
+
+
+        
 
 
             window.clear(sf::Color::White);
