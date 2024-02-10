@@ -304,31 +304,35 @@ void drawInputWindow(sf::RenderWindow& window, sf::Font& font)
         sf::Event inputEvent;
         while (window.pollEvent(inputEvent))
         {
-            if (inputEvent.type == sf::Event::Closed)
-                window.close();
-            if (inputEvent.type == sf::Event::MouseButtonPressed)
-            {
-                if (inputEvent.mouseButton.button == sf::Mouse::Left)
-                {
-                    sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
-                    if (button1.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePosition)))
+            switch (inputEvent.type)
+			{ 
+            	case sf::Event::Closed:
+                    window.close();
+					break;
+                case sf::Event::MouseButtonPressed:
+                    if (inputEvent.mouseButton.button == sf::Mouse::Left)
                     {
-                        std::cout << "Button 1 clicked" << std::endl;
+                        sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
+                        if (button1.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePosition)))
+                        {
+                            std::cout << "Button 1 clicked" << std::endl;
+                        }
+                        if (button2.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePosition)))
+                        {
+                            std::cout << "Button 2 clicked" << std::endl;
+                        }
+                        if (button3.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePosition)))
+                        {
+                            std::cout << "Button 3 clicked" << std::endl;
+                        }
+                        if (buttonWall.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePosition)))
+                        {
+                            std::cout << "Button Wall clicked" << std::endl;
+                        }
                     }
-                    if (button2.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePosition)))
-                    {
-                        std::cout << "Button 2 clicked" << std::endl;
-                    }
-                    if (button3.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePosition)))
-                    {
-                        std::cout << "Button 3 clicked" << std::endl;
-                    }
-                    if (buttonWall.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePosition)))
-                    {
-                        std::cout << "Button Wall clicked" << std::endl;
-                    }
-                }
+
             }
+            
 
             //accept inputs
 
