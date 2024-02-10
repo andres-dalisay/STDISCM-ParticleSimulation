@@ -7,19 +7,19 @@
 
 void drawInputWindow(sf::RenderWindow& window, sf::Font& font)
 {
-   
-	sf::RectangleShape inputBoxParticles(sf::Vector2f(50, 20));
+
+    sf::RectangleShape inputBoxParticles(sf::Vector2f(50, 20));
     inputBoxParticles.setFillColor(sf::Color::White);
     inputBoxParticles.setOutlineThickness(2);
     inputBoxParticles.setOutlineColor(sf::Color::Black);
     inputBoxParticles.setPosition(150, 50);
 
-	sf::Text textNoOfParticles;
-	textNoOfParticles.setFont(font);
-	textNoOfParticles.setCharacterSize(15);
-	textNoOfParticles.setFillColor(sf::Color::Black);
-	textNoOfParticles.setString("No. of Particles");
-	textNoOfParticles.setPosition(10, 50);
+    sf::Text textNoOfParticles;
+    textNoOfParticles.setFont(font);
+    textNoOfParticles.setCharacterSize(15);
+    textNoOfParticles.setFillColor(sf::Color::Black);
+    textNoOfParticles.setString("No. of Particles");
+    textNoOfParticles.setPosition(10, 50);
 
     //CASE 1
 
@@ -243,63 +243,127 @@ void drawInputWindow(sf::RenderWindow& window, sf::Font& font)
     button3Text.setOrigin(textBounds.left + textBounds.width / 2.0f, textBounds.top + textBounds.height / 2.0f);
     button3Text.setPosition(button3.getPosition().x + button3.getSize().x / 2.0f, button3.getPosition().y + button3.getSize().y / 2.0f);
 
+    // Wall
+    sf::RectangleShape inputBoxWallStartX(sf::Vector2f(25, 20));
+    inputBoxWallStartX.setFillColor(sf::Color::White);
+    inputBoxWallStartX.setOutlineThickness(2);
+    inputBoxWallStartX.setOutlineColor(sf::Color::Black);
+    inputBoxWallStartX.setPosition(150, 550);
+
+    sf::RectangleShape inputBoxWallStartY(sf::Vector2f(25, 20));
+    inputBoxWallStartY.setFillColor(sf::Color::White);
+    inputBoxWallStartY.setOutlineThickness(2);
+    inputBoxWallStartY.setOutlineColor(sf::Color::Black);
+    inputBoxWallStartY.setPosition(175, 550);
+
+    sf::Text textWallStart;
+    textWallStart.setFont(font);
+    textWallStart.setCharacterSize(15);
+    textWallStart.setFillColor(sf::Color::Black);
+    textWallStart.setString("Start Wall Point");
+    textWallStart.setPosition(10, 550);
+
+    sf::RectangleShape inputBoxWallEndX(sf::Vector2f(25, 20));
+    inputBoxWallEndX.setFillColor(sf::Color::White);
+    inputBoxWallEndX.setOutlineThickness(2);
+    inputBoxWallEndX.setOutlineColor(sf::Color::Black);
+    inputBoxWallEndX.setPosition(150, 580);
+
+    sf::RectangleShape inputBoxWallEndY(sf::Vector2f(25, 20));
+    inputBoxWallEndY.setFillColor(sf::Color::White);
+    inputBoxWallEndY.setOutlineThickness(2);
+    inputBoxWallEndY.setOutlineColor(sf::Color::Black);
+    inputBoxWallEndY.setPosition(175, 580);
+
+    sf::Text textWallEnd;
+    textWallEnd.setFont(font);
+    textWallEnd.setCharacterSize(15);
+    textWallEnd.setFillColor(sf::Color::Black);
+    textWallEnd.setString("End Wall Point");
+    textWallEnd.setPosition(10, 580);
+
+    sf::RectangleShape buttonWall(sf::Vector2f(190, 25));
+    buttonWall.setFillColor(sf::Color::White);
+    buttonWall.setOutlineThickness(2);
+    buttonWall.setOutlineColor(sf::Color::Black);
+    buttonWall.setPosition(10, 620);
+
+    sf::Text buttonWallText;
+    buttonWallText.setFont(font);
+    buttonWallText.setCharacterSize(20);
+    buttonWallText.setFillColor(sf::Color::Black);
+    buttonWallText.setString("Insert Wall");
+
+    textBounds = buttonWallText.getLocalBounds();
+    buttonWallText.setOrigin(textBounds.left + textBounds.width / 2.0f, textBounds.top + textBounds.height / 2.0f);
+    buttonWallText.setPosition(buttonWall.getPosition().x + buttonWall.getSize().x / 2.0f, buttonWall.getPosition().y + buttonWall.getSize().y / 2.0f);
+
 
     while (window.isOpen())
     {
-		sf::Event inputEvent;
+        sf::Event inputEvent;
         while (window.pollEvent(inputEvent))
         {
-			if (inputEvent.type == sf::Event::Closed)
-				window.close();
-		}
-
-		window.clear(sf::Color::White);
-		// Draw input boxes here
-		window.draw(inputBoxParticles);
-		window.draw(textNoOfParticles);
-        window.draw(inputBoxParticleStart);
-        window.draw(textParticleStart);
-        window.draw(inputBoxParticleEnd);
-        window.draw(textParticleEnd);
-        window.draw(inputBoxParticleVelocity);
-        window.draw(textParticleVelocity);
-        window.draw(inputBoxParticleAngle);
-        window.draw(textParticleAngle);
-        window.draw(button1);
-        window.draw(button1Text);
-
-        window.draw(inputBoxParticleStart2x);
-        window.draw(inputBoxParticleStart2y);
-        window.draw(textParticleStart2);
-		window.draw(inputBoxParticleVelocity2);
-		window.draw(textParticleVelocity2);
-		window.draw(inputBoxParticleAngleStart);
-		window.draw(textParticleAngleStart);
-		window.draw(inputBoxParticleAngleEnd);
-		window.draw(textParticleAngleEnd);
-		window.draw(button2);
-		window.draw(button2Text);
-
-        window.draw(inputBoxParticleStart3x);
-        window.draw(inputBoxParticleStart3y);
-        window.draw(textParticleStart3);
-        window.draw(inputBoxParticleAngle2);
-        window.draw(textParticleAngle2);
-        window.draw(inputBoxParticleVelocityStart);
-        window.draw(textParticleVelocityStart);
-        window.draw(inputBoxParticleVelocityEnd);
-        window.draw(textParticleVelocityEnd);
-        window.draw(button3);
-        window.draw(button3Text);
+            if (inputEvent.type == sf::Event::Closed)
+                window.close();
 
 
 
+            window.clear(sf::Color::White);
+            // Draw input boxes here
+            window.draw(inputBoxParticles);
+            window.draw(textNoOfParticles);
+            window.draw(inputBoxParticleStart);
+            window.draw(textParticleStart);
+            window.draw(inputBoxParticleEnd);
+            window.draw(textParticleEnd);
+            window.draw(inputBoxParticleVelocity);
+            window.draw(textParticleVelocity);
+            window.draw(inputBoxParticleAngle);
+            window.draw(textParticleAngle);
+            window.draw(button1);
+            window.draw(button1Text);
 
-		window.display();
-	}
+            window.draw(inputBoxParticleStart2x);
+            window.draw(inputBoxParticleStart2y);
+            window.draw(textParticleStart2);
+            window.draw(inputBoxParticleVelocity2);
+            window.draw(textParticleVelocity2);
+            window.draw(inputBoxParticleAngleStart);
+            window.draw(textParticleAngleStart);
+            window.draw(inputBoxParticleAngleEnd);
+            window.draw(textParticleAngleEnd);
+            window.draw(button2);
+            window.draw(button2Text);
+
+            window.draw(inputBoxParticleStart3x);
+            window.draw(inputBoxParticleStart3y);
+            window.draw(textParticleStart3);
+            window.draw(inputBoxParticleAngle2);
+            window.draw(textParticleAngle2);
+            window.draw(inputBoxParticleVelocityStart);
+            window.draw(textParticleVelocityStart);
+            window.draw(inputBoxParticleVelocityEnd);
+            window.draw(textParticleVelocityEnd);
+            window.draw(button3);
+            window.draw(button3Text);
+
+            window.draw(inputBoxWallStartX);
+            window.draw(inputBoxWallStartY);
+            window.draw(textWallStart);
+            window.draw(inputBoxWallEndX);
+            window.draw(inputBoxWallEndY);
+            window.draw(textWallEnd);
+            window.draw(buttonWall);
+            window.draw(buttonWallText);
 
 
+            window.display();
+        }
+    }
 }
+
+
 
 int main()
 {
