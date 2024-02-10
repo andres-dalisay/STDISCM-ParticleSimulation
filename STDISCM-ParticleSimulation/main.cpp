@@ -4,6 +4,9 @@
 
 #include "FPS.cpp"
 
+#include "imgui.h"
+#include "imgui-SFML.h"
+
 
 void drawInputWindow(sf::RenderWindow& window, sf::Font& font)
 {
@@ -17,6 +20,7 @@ int main()
     // Create the main window
     sf::RenderWindow mainWindow(sf::VideoMode(1280, 720), "Particle Simulator");
     mainWindow.setFramerateLimit(60);
+    ImGui::SFML::Init(mainWindow);
 
     auto lastFPSDrawTime = std::chrono::steady_clock::now();
     const std::chrono::milliseconds interval(500); // 0.5 seconds
@@ -53,7 +57,7 @@ int main()
     buttonText.setOrigin(textBounds.left + textBounds.width / 2.0f, textBounds.top + textBounds.height / 2.0f);
     buttonText.setPosition(button.getPosition().x + button.getSize().x / 2.0f, button.getPosition().y + button.getSize().y / 2.0f);
 
-
+    sf::Clock deltaClock;
     // Main loop
     while (mainWindow.isOpen())
     {
@@ -64,33 +68,113 @@ int main()
         sf::Event event;
         while (mainWindow.pollEvent(event))
         {
+            ImGui::SFML::ProcessEvent(event);
+            
             if (event.type == sf::Event::Closed)
                 mainWindow.close();
-
-            // Check for button click
-            if (event.type == sf::Event::MouseButtonPressed)
-            {
-                if (event.mouseButton.button == sf::Mouse::Left)
-                {
-                    sf::Vector2i mousePosition = sf::Mouse::getPosition(mainWindow);
-                    if (button.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePosition)))
-                    {
-                        // Open new window with input boxes
-                        sf::RenderWindow inputWindow(sf::VideoMode(300, 700), "Input Window", sf::Style::Titlebar | sf::Style::Close);
-                        inputWindow.setFramerateLimit(60);
-
-                        drawInputWindow(inputWindow, font);
-                    }
-                }
-            }
+            
         }
+        ImGui::SFML::Update(mainWindow, deltaClock.restart());
+
+        ImGui::Begin("Add Particle", NULL, ImGuiWindowFlags_AlwaysAutoResize);
+        ImGui::SeparatorText("Add Particles");
+
+        //imgui input numbers only
+        static int numberParticles = 0;
+        ImGui::InputInt("Num Particles", &numberParticles);
+        ImGui::Text("");
+        ImGui::Text("");
+
+        static int startX = 0;
+        static int startY = 0;
+        static int velocity = 0;
+        static int angle = 0;
+
+        ImGui::InputInt("Start X", &startX);
+        ImGui::InputInt("Start Y", &startY);
+        ImGui::InputInt("Velocity", &velocity);
+        ImGui::InputInt("Angle", &angle);
+        
+        //imgui button input
+        if (ImGui::Button("Add Case 1"))
+        {
+			std::cout << "CASE1: Adding " << numberParticles << " particles at " << startX << ", " << startY << " with velocity " << velocity << " and angle " << angle << std::endl;
+		}
+
+        ImGui::Text("");
+        ImGui::Text("");
+
+        static int startX2 = 0;
+        static int startY2 = 0;
+        static int velocity2 = 0;
+        static int angleStart = 0;
+        static int angleEnd = 0;
+
+        ImGui::InputInt("Start X", &startX2);
+        ImGui::InputInt("Start Y", &startY2);
+        ImGui::InputInt("Velocity", &velocity2);
+        ImGui::InputInt("Angle Start", &angleStart);
+        ImGui::InputInt("Angle End", &angleEnd);
+
+        //imgui button input
+        if (ImGui::Button("Add Case 2"))
+        {
+            std::cout << "CASE2: Adding " << numberParticles << " particles at " << startX2 << ", " << startY2 << " with velocity " << velocity2 << " and angle " << angleStart << " to " << angleEnd << std::endl;
+        }
+
+        ImGui::Text("");
+        ImGui::Text("");
+
+        static int startX3 = 0;
+        static int startY3 = 0;
+        static int angle3 = 0;
+        static int velocityStart = 0;
+        static int velocityEnd = 0;
+
+        ImGui::InputInt("Start X", &startX3);
+        ImGui::InputInt("Start Y", &startY3);
+        ImGui::InputInt("Angle", &angle3);
+        ImGui::InputInt("Velocity Start", &velocityStart);
+        ImGui::InputInt("Velocity End", &velocityEnd);
+
+        //imgui button input
+        if (ImGui::Button("Add Case 3"))
+        {
+			std::cout << "CASE3: Adding " << numberParticles << " particles at " << startX3 << ", " << startY3 << " with angle " << angle3 << " and velocity " << velocityStart << " to " << velocityEnd << std::endl;
+		}
+
+        ImGui::End();
+
+        ImGui::Begin("Input Wall", NULL, ImGuiWindowFlags_AlwaysAutoResize);        
+        ImGui::SeparatorText("Add Walls");
+
+        static int wallStartX = 0;
+        static int wallStartY = 0;
+        static int wallEndX = 0;
+        static int wallEndY = 0;
+
+        ImGui::InputInt("Start X", &wallStartX);
+        ImGui::InputInt("Start Y", &wallStartY);
+        ImGui::InputInt("End X", &wallEndX);
+        ImGui::InputInt("End Y", &wallEndY);
+
+        //imgui button input
+        if (ImGui::Button("Add Wall"))
+        {
+            std::cout << "Adding wall from " << wallStartX << ", " << wallStartY << " to " << wallEndX << ", " << wallEndY << std::endl;
+        }
+
+
+        ImGui::End();
+
+
 
         // Clear the main window
         mainWindow.clear(sf::Color::Black);
 
-        // Draw button
-        mainWindow.draw(button);
-        mainWindow.draw(buttonText);
+        //// Draw button
+        //mainWindow.draw(button);
+        //mainWindow.draw(buttonText);
 
         fps.update();
 
@@ -101,6 +185,8 @@ int main()
             fpsText.setString(std::to_string(fps.getFPS()) + " FPS");
         }
         mainWindow.draw(fpsText);
+
+        ImGui::SFML::Render(mainWindow);
 
         // Display the contents of the main window
         mainWindow.display();
