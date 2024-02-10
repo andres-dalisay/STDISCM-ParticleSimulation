@@ -298,6 +298,53 @@ void drawInputWindow(sf::RenderWindow& window, sf::Font& font)
     buttonWallText.setOrigin(textBounds.left + textBounds.width / 2.0f, textBounds.top + textBounds.height / 2.0f);
     buttonWallText.setPosition(buttonWall.getPosition().x + buttonWall.getSize().x / 2.0f, buttonWall.getPosition().y + buttonWall.getSize().y / 2.0f);
 
+    
+    std::string noOfParticles;
+    std::string particleStartX;
+    std::string particleEndX;
+    std::string particleVelocity;
+    std::string particleAngle;
+
+    std::string particleStart2x;
+    std::string particleStart2y;
+    std::string particleVelocity2;
+    std::string particleAngleStart;
+    std::string particleAngleEnd;
+        
+    std::string particleStart3x;
+    std::string particleStart3y;
+    std::string particleAngle2;
+    std::string particleVelocityStart;
+    std::string particleVelocityEnd;
+
+    std::string wallStartX;
+    std::string wallStartY;
+    std::string wallEndX;
+    std::string wallEndY;
+
+    bool inputBoxNoParticlesBool = false;
+    bool inputBoxParticleStartBool = false;
+    bool inputBoxParticleEndBool = false;
+    bool inputBoxParticleVelocityBool = false;
+    bool inputBoxParticleAngleBool = false;
+
+    bool inputBoxParticleStart2xBool = false;
+    bool inputBoxParticleStart2yBool = false;
+    bool inputBoxParticleVelocity2Bool = false;
+    bool inputBoxParticleAngleStartBool = false;
+    bool inputBoxParticleAngleEndBool = false;
+
+    bool inputBoxParticleStart3xBool = false;
+    bool inputBoxParticleStart3yBool = false;
+    bool inputBoxParticleAngle2Bool = false;
+    bool inputBoxParticleVelocityStartBool = false;
+    bool inputBoxParticleVelocityEndBool = false;
+
+    bool inputBoxWallStartXBool = false;
+    bool inputBoxWallStartYBool = false;
+    bool inputBoxWallEndXBool = false;
+    bool inputBoxWallEndYBool = false;
+
 
     while (window.isOpen())
     {
@@ -329,7 +376,126 @@ void drawInputWindow(sf::RenderWindow& window, sf::Font& font)
                         {
                             std::cout << "Button Wall clicked" << std::endl;
                         }
+
+                        if (inputBoxParticles.getGlobalBounds().contains(mousePosition.x, mousePosition.y))
+                        {
+                            inputBoxNoParticlesBool = true;
+                        }
+                        if (inputBoxParticleStart.getGlobalBounds().contains(mousePosition.x, mousePosition.y))
+                        {
+							inputBoxParticleStartBool = true;
+						}
+                        if (inputBoxParticleEnd.getGlobalBounds().contains(mousePosition.x, mousePosition.y))
+                        {
+                            inputBoxParticleEndBool = true;
+                        }
+                        if (inputBoxParticleVelocity.getGlobalBounds().contains(mousePosition.x, mousePosition.y))
+                        {
+							inputBoxParticleVelocityBool = true;
+						}
+                        if (inputBoxParticleAngle.getGlobalBounds().contains(mousePosition.x, mousePosition.y))
+                        {
+							inputBoxParticleAngleBool = true;
+						}
+
+
+                        if (inputBoxParticleStart2x.getGlobalBounds().contains(mousePosition.x, mousePosition.y))
+                        {
+                            inputBoxParticleStart2xBool = true;
+                        }
+                        if (inputBoxParticleStart2y.getGlobalBounds().contains(mousePosition.x, mousePosition.y))
+                        {
+							inputBoxParticleStart2yBool = true;
+						}
+                        if (inputBoxParticleVelocity2.getGlobalBounds().contains(mousePosition.x, mousePosition.y))
+						{
+                            inputBoxParticleVelocity2Bool = true;
+                        }
+                        if (inputBoxParticleAngleStart.getGlobalBounds().contains(mousePosition.x, mousePosition.y))
+                        {
+							inputBoxParticleAngleStartBool = true;
+						}
+                        if (inputBoxParticleAngleEnd.getGlobalBounds().contains(mousePosition.x, mousePosition.y))
+                        {
+							inputBoxParticleAngleEndBool = true;
+						}
+
+
+                        if (inputBoxParticleStart3x.getGlobalBounds().contains(mousePosition.x, mousePosition.y))
+                        {
+                            inputBoxParticleStart3xBool = true;
+                        }
+                        if (inputBoxParticleStart3y.getGlobalBounds().contains(mousePosition.x, mousePosition.y))
+						{
+                            inputBoxParticleStart3yBool = true;
+                        }
+                        if (inputBoxParticleAngle2.getGlobalBounds().contains(mousePosition.x, mousePosition.y))
+						{
+                            inputBoxParticleAngle2Bool = true;
+                        }
+                        if (inputBoxParticleVelocityStart.getGlobalBounds().contains(mousePosition.x, mousePosition.y))
+                        {
+                            inputBoxParticleVelocityStartBool = true;
+                        }
+                        if (inputBoxParticleVelocityEnd.getGlobalBounds().contains(mousePosition.x, mousePosition.y))
+                        {
+							inputBoxParticleVelocityEndBool = true;
+						}
+
+                        if (inputBoxWallStartX.getGlobalBounds().contains(mousePosition.x, mousePosition.y))
+                        {
+							inputBoxWallStartXBool = true;
+						}
+                        if (inputBoxWallStartY.getGlobalBounds().contains(mousePosition.x, mousePosition.y))
+						{
+                        	inputBoxWallStartYBool = true;
+                        }
+                        if (inputBoxWallEndX.getGlobalBounds().contains(mousePosition.x, mousePosition.y))
+						{
+                            inputBoxWallEndXBool = true;
+                        }
+                        if (inputBoxWallEndY.getGlobalBounds().contains(mousePosition.x, mousePosition.y))
+                        {
+							inputBoxWallEndYBool = true;
+						}
+                                                
                     }
+                    break;
+                case sf::Event::KeyPressed:
+                    if (inputEvent.key.code == sf::Keyboard::Escape)
+                    {
+						window.close();
+					}
+					break;
+                case sf::Event::TextEntered:
+                    if (inputBoxNoParticlesBool)
+                    {
+                        if (std::isdigit(static_cast<int>(inputEvent.text.unicode)))
+                        {
+                            noOfParticles += static_cast<char>(inputEvent.text.unicode);
+                            textNoOfParticles.setString(noOfParticles);
+						}
+                        else if (inputEvent.text.unicode == '\b' && !noOfParticles.empty()) {
+                            noOfParticles.pop_back();
+                            textNoOfParticles.setString(noOfParticles);
+                        }
+					}
+
+                    if (inputBoxParticleStartBool)
+                    {
+                        if (std::isdigit(static_cast<int>(inputEvent.text.unicode)))
+                        {
+							particleStartX += static_cast<char>(inputEvent.text.unicode);
+							textParticleStart.setString(particleStartX);
+						}
+                        else if (inputEvent.text.unicode == '\b' && !particleStartX.empty()) {
+							particleStartX.pop_back();
+							textParticleStart.setString(particleStartX);
+						}
+					}
+                   
+                    break;
+
 
             }
             
