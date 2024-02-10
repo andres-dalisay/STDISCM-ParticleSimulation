@@ -3,6 +3,8 @@
 #include <math.h>
 #include<chrono>
 
+#include "ball.cpp"
+
 #define PI 3.14159265358979323846
 
 class FPS
@@ -67,27 +69,31 @@ int main()
 	fpsText.setPosition(100, 100);
 	fpsText.setStyle(sf::Text::Bold | sf::Text::Underlined);
 
+	//// Create the ball shape
+	//sf::CircleShape ball(10);
+	//ball.setFillColor(sf::Color::Red);
+	//ball.setPointCount(10);
+	//ball.setPosition(300, 400); // Start position of the ball
+
+	//// set angle from 0 to 360 degrees
+	//float deg = 45.0f;
+
+	//// convert angle to radians
+	//float angle = deg * PI / 180;
+
+	//// set the speed of the ball
+	//float speed = 10.0f;
+	//
+	//// set the velocity of the ball based on angle and speed
+	//float velocityX = speed * cos(angle);
+	//float velocityY = speed * sin(angle);
+
+	//std::cout << "velocityX: " << velocityX;
+	//std::cout << "velocityY: " << velocityY;
+
 	// Create the ball shape
-	sf::CircleShape ball(10);
-	ball.setFillColor(sf::Color::Red);
-	ball.setPointCount(10);
-	ball.setPosition(300, 400); // Start position of the ball
+	Ball ball(50,50,180,10);
 
-	// set angle from 0 to 360 degrees
-	float deg = 45.0f;
-
-	// convert angle to radians
-	float angle = deg * PI / 180;
-
-	// set the speed of the ball
-	float speed = 10.0f;
-	
-	// set the velocity of the ball based on angle and speed
-	float velocityX = speed * cos(angle);
-	float velocityY = speed * sin(angle);
-
-	std::cout << "velocityX: " << velocityX;
-	std::cout << "velocityY: " << velocityY;
 
 	// Create the walls
 	sf::RectangleShape leftWall(sf::Vector2f(10.f, 600.f));
@@ -118,23 +124,25 @@ int main()
 
 		
 		// Update ball position
-		ball.move(velocityX, velocityY);
+		ball.moveBall();
+		ball.checkCollision();
 
 		// Check for collisions with window boundaries
-		if (ball.getPosition().x > window.getSize().x || ball.getPosition().x < 0)
+		/*if (ball.getPosition().x > window.getSize().x || ball.getPosition().x < 0)
 			velocityX = -velocityX;
 		if (ball.getPosition().y > window.getSize().y || ball.getPosition().y < 0)
-			velocityY = -velocityY;
+			velocityY = -velocityY;*/
 
-		if (ball.getGlobalBounds().intersects(leftWall.getGlobalBounds()) ||
+		/*if (ball.getGlobalBounds().intersects(leftWall.getGlobalBounds()) ||
 			ball.getGlobalBounds().intersects(rightWall.getGlobalBounds()))
-			velocityX = -velocityX;
+			velocityX = -velocityX;*/
 
 		// Clear the window
 		window.clear();
 
 		// Draw the ball
-		window.draw(ball);
+		//window.draw(ball);
+		ball.drawBall(window);
 
 		window.draw(leftWall);
 		window.draw(rightWall);

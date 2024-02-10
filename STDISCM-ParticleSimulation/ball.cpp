@@ -12,6 +12,16 @@ public:
 		speed = 0;
 	}
 
+	Ball(float x, float y, float angle, float speed) {
+		ball = sf::CircleShape(10);
+		ball.setPosition(x, y);
+
+		updateBallVector(angle, speed);
+
+		angle = angle;
+		speed = speed;
+	}
+
 private:
 	sf::CircleShape ball;
 	std::vector<float> ballVector;
@@ -20,20 +30,29 @@ private:
 
 public:
 
-	void updateBallVector(){
-		float deg = 45.0f;
-		angle = deg * PI / 180;
-		speed = 10.0f;
+	void drawBall(sf::RenderWindow& window) {
+		window.draw(ball);
+	}
 
-		ballVector[0] = speed * cos(angle);
-		ballVector[1] = speed * sin(angle);
+	void updateBallVector(float deg, float speed){
+		float angleNew = deg * PI / 180;
+		speed = speed;
+
+		ballVector = { speed * cos(angleNew) , speed * sin(angleNew) };
+
+		//ballVector.at(0) = (speed * cos(angleNew));
+		//ballVector.at(1) = (speed * sin(angleNew));
 
 	}
 
+	void moveBall() {
+		ball.move(ballVector.at(0), ballVector.at(1));
+	}
+
 	void checkCollision(){
-		if (ball.getPosition.x > 1080 || ballVector.at(0) < 0)
+		if (ball.getPosition().x > 1080 || ball.getPosition().x < 0)
 			ballVector.at(0) = -ballVector.at(0);
-		if (ballVector.at(1) > 720 || ballVector.at(1) < 0)
+		if (ball.getPosition().y > 720 || ball.getPosition().y < 0)
 			ballVector.at(1) = -ballVector.at(1);
 	}
 	
