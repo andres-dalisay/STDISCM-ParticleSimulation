@@ -31,43 +31,23 @@ int main()
 	fpsText.setPosition(100, 100);
 	fpsText.setStyle(sf::Text::Bold | sf::Text::Underlined);
 
-	// Create the ball shape
+
+	//Particle particle(0, 300, 400, 45, 10);
 	//sf::CircleShape ball(10);
-	//ball.setFillColor(sf::Color::Red);
+	//ball.setPosition(particle.getPosX(), particle.getPosY());
 	//ball.setPointCount(10);
-	//ball.setPosition(300, 400); // Start position of the ball
+	//ball.setFillColor(sf::Color::Red);
 
-	//// set angle from 0 to 360 degrees
-	//float deg = 45.0f;
+	std::vector<Particle> particles;
+	std::vector<sf::CircleShape> particleShapes;
 
-	//// convert angle to radians
-	//float angle = deg * PI / 180;
-
-	//// set the speed of the ball
-	//float speed = 10.0f;
-	//
-	//// set the velocity of the ball based on angle and speed
-	//float velocityX = speed * cos(angle);
-	//float velocityY = speed * sin(angle);
-
-	//std::cout << "velocityX: " << velocityX;
-	//std::cout << "velocityY: " << velocityY;
-
-	// Create the walls
-	//sf::RectangleShape leftWall(sf::Vector2f(10.f, 600.f));
-	//leftWall.setPosition(0.f, 0.f);
-	//leftWall.setFillColor(sf::Color::Green);
-
-	//sf::RectangleShape rightWall(sf::Vector2f(10.f, 600.f));
-	//rightWall.setPosition(790.f, 0.f);
-	//rightWall.setFillColor(sf::Color::Green);
-
-	Particle particle(0, 300, 400, 45, 10);
-	sf::CircleShape ball(10);
-	ball.setPosition(particle.getPosX(), particle.getPosY());
-	ball.setPointCount(10);
-	ball.setFillColor(sf::Color::Red);
-
+	for (int i = 0; i < 10; i++) {
+		//push particles with random values
+		particles.push_back(Particle(i, rand() % 1280, rand() % 720, rand() % 360, rand() % 10));
+		particleShapes.push_back(sf::CircleShape(10, 10));
+		particleShapes.at(i).setPosition(particles.at(i).getPosX(), particles.at(i).getPosY());
+		particleShapes.at(i).setFillColor(sf::Color::Red);
+	}
 
 	// Main loop
 	while (window.isOpen())
@@ -84,9 +64,15 @@ int main()
 		
 		
 		// Update ball position
-		particle.updateParticlePosition();
-		particle.checkCollision();
-		ball.setPosition(particle.getPosX(), particle.getPosY());
+		for (int i = 0; i < particles.size(); i++) {
+			particles[i].updateParticlePosition();
+			particles[i].checkCollision();
+			//std::cout << particles[i].getPosX() << " " << particles[i].getPosY() << std::endl;
+			particleShapes.at(i).setPosition(particles.at(i).getPosX(), particles.at(i).getPosY());
+			//std::cout << particleShapes.at(i).getPosition().x << " " << particleShapes.at(i).getPosition().y << std::endl;
+		}
+
+
 
 		// Check for collisions with window boundaries
 		//if (ball.getPosition().x > window.getSize().x || ball.getPosition().x < 0)
@@ -101,8 +87,13 @@ int main()
 		// Clear the window
 		window.clear();
 
+
+		for (int i = 0; i < particleShapes.size(); i++) {
+			window.draw(particleShapes[i]);
+		}
+
 		// Draw the ball
-		window.draw(ball);
+		//window.draw(ball);
 
 		//window.draw(leftWall);
 		//window.draw(rightWall);
