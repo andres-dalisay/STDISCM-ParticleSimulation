@@ -8,18 +8,88 @@
 void drawInputWindow(sf::RenderWindow& window, sf::Font& font)
 {
     // Create input boxes in the new window
-	sf::RectangleShape inputBox(sf::Vector2f(100, 20));
-	inputBox.setFillColor(sf::Color::White);
-	inputBox.setOutlineThickness(2);
-	inputBox.setOutlineColor(sf::Color::Black);
-	inputBox.setPosition(100, 50);
+	sf::RectangleShape inputBoxParticles(sf::Vector2f(50, 20));
+    inputBoxParticles.setFillColor(sf::Color::White);
+    inputBoxParticles.setOutlineThickness(2);
+    inputBoxParticles.setOutlineColor(sf::Color::Black);
+    inputBoxParticles.setPosition(150, 50);
 
-	sf::Text inputText;
-	inputText.setFont(font);
-	inputText.setCharacterSize(15);
-	inputText.setFillColor(sf::Color::Black);
-	inputText.setString("Input Box");
-	inputText.setPosition(10, 50);
+	sf::Text textNoOfParticles;
+	textNoOfParticles.setFont(font);
+	textNoOfParticles.setCharacterSize(15);
+	textNoOfParticles.setFillColor(sf::Color::Black);
+	textNoOfParticles.setString("No. of Particles");
+	textNoOfParticles.setPosition(10, 50);
+
+    sf::RectangleShape inputBoxParticleStart(sf::Vector2f(50, 20));
+    inputBoxParticleStart.setFillColor(sf::Color::White);
+    inputBoxParticleStart.setOutlineThickness(2);
+    inputBoxParticleStart.setOutlineColor(sf::Color::Black);
+    inputBoxParticleStart.setPosition(150, 100);
+
+    sf::Text textParticleStart;
+    textParticleStart.setFont(font);
+    textParticleStart.setCharacterSize(15);
+    textParticleStart.setFillColor(sf::Color::Black);
+    textParticleStart.setString("Start Point");
+    textParticleStart.setPosition(10, 100);
+
+    sf::RectangleShape inputBoxParticleEnd(sf::Vector2f(50, 20));
+    inputBoxParticleEnd.setFillColor(sf::Color::White);
+    inputBoxParticleEnd.setOutlineThickness(2);
+    inputBoxParticleEnd.setOutlineColor(sf::Color::Black);
+    inputBoxParticleEnd.setPosition(150, 120);
+
+    sf::Text textParticleEnd;
+    textParticleEnd.setFont(font);
+    textParticleEnd.setCharacterSize(15);
+    textParticleEnd.setFillColor(sf::Color::Black);
+    textParticleEnd.setString("End Point");
+    textParticleEnd.setPosition(10, 120);
+
+    sf::RectangleShape inputBoxParticleVelocity(sf::Vector2f(50, 20));
+    inputBoxParticleVelocity.setFillColor(sf::Color::White);
+    inputBoxParticleVelocity.setOutlineThickness(2);
+    inputBoxParticleVelocity.setOutlineColor(sf::Color::Black);
+    inputBoxParticleVelocity.setPosition(150, 140);
+
+    sf::Text textParticleVelocity;
+    textParticleVelocity.setFont(font);
+    textParticleVelocity.setCharacterSize(15);
+    textParticleVelocity.setFillColor(sf::Color::Black);
+    textParticleVelocity.setString("Velocity");
+    textParticleVelocity.setPosition(10, 140);
+
+    sf::RectangleShape inputBoxParticleAngle(sf::Vector2f(50, 20));
+    inputBoxParticleAngle.setFillColor(sf::Color::White);
+    inputBoxParticleAngle.setOutlineThickness(2);
+    inputBoxParticleAngle.setOutlineColor(sf::Color::Black);
+    inputBoxParticleAngle.setPosition(150, 160);
+
+    sf::Text textParticleAngle;
+    textParticleAngle.setFont(font);
+    textParticleAngle.setCharacterSize(15);
+    textParticleAngle.setFillColor(sf::Color::Black);
+    textParticleAngle.setString("Angle");
+    textParticleAngle.setPosition(10, 160);
+
+    sf::RectangleShape button1(sf::Vector2f(190, 25));
+    button1.setFillColor(sf::Color::White);
+    button1.setOutlineThickness(2);
+    button1.setOutlineColor(sf::Color::Black);
+    button1.setPosition(10, 210);
+
+    sf::Text button1Text;
+    button1Text.setFont(font);
+    button1Text.setCharacterSize(20);
+    button1Text.setFillColor(sf::Color::Black);
+    button1Text.setString("Insert Case 1");
+
+    // Center the position of text within the button
+    sf::FloatRect textBounds = button1Text.getLocalBounds();
+    button1Text.setOrigin(textBounds.left + textBounds.width / 2.0f, textBounds.top + textBounds.height / 2.0f);
+    button1Text.setPosition(button1.getPosition().x + button1.getSize().x / 2.0f, button1.getPosition().y + button1.getSize().y / 2.0f);
+
 
     while (window.isOpen())
     {
@@ -32,8 +102,21 @@ void drawInputWindow(sf::RenderWindow& window, sf::Font& font)
 
 		window.clear(sf::Color::White);
 		// Draw input boxes here
-		window.draw(inputBox);
-		window.draw(inputText);
+		window.draw(inputBoxParticles);
+		window.draw(textNoOfParticles);
+        window.draw(inputBoxParticleStart);
+        window.draw(textParticleStart);
+        window.draw(inputBoxParticleEnd);
+        window.draw(textParticleEnd);
+        window.draw(inputBoxParticleVelocity);
+        window.draw(textParticleVelocity);
+        window.draw(inputBoxParticleAngle);
+        window.draw(textParticleAngle);
+        window.draw(button1);
+        window.draw(button1Text);
+
+
+
 		window.display();
 	}
 
@@ -74,7 +157,7 @@ int main()
     buttonText.setFont(font);
     buttonText.setCharacterSize(20);
     buttonText.setFillColor(sf::Color::White);
-    buttonText.setString("Input");
+    buttonText.setString("Balls");
 
     // Center the position of text within the button
     sf::FloatRect textBounds = buttonText.getLocalBounds();
@@ -104,7 +187,7 @@ int main()
                     if (button.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePosition)))
                     {
                         // Open new window with input boxes
-                        sf::RenderWindow inputWindow(sf::VideoMode(800, 600), "Input Window");
+                        sf::RenderWindow inputWindow(sf::VideoMode(300, 700), "Input Window", sf::Style::Titlebar | sf::Style::Close);
                         inputWindow.setFramerateLimit(60);
 
                         drawInputWindow(inputWindow, font);
