@@ -76,7 +76,7 @@ int main()
         }
         ImGui::SFML::Update(mainWindow, deltaClock.restart());
 
-        ImGui::Begin("Add Particle", NULL, ImGuiWindowFlags_AlwaysAutoResize);
+        ImGui::Begin("Input Particle", NULL, ImGuiWindowFlags_AlwaysAutoResize);
         ImGui::SeparatorText("Add Particles");
 
         //imgui input numbers only
@@ -90,10 +90,10 @@ int main()
         static int velocity = 0;
         static int angle = 0;
 
-        ImGui::InputInt("Start X", &startX);
-        ImGui::InputInt("Start Y", &startY);
-        ImGui::InputInt("Velocity", &velocity);
-        ImGui::InputInt("Angle", &angle);
+        ImGui::InputInt("Start X1", &startX);
+        ImGui::InputInt("Start Y1", &startY);
+        ImGui::InputInt("Velocity 1", &velocity);
+        ImGui::InputInt("Angle 1", &angle);
         
         //imgui button input
         if (ImGui::Button("Add Case 1"))
@@ -110,9 +110,9 @@ int main()
         static int angleStart = 0;
         static int angleEnd = 0;
 
-        ImGui::InputInt("Start X", &startX2);
-        ImGui::InputInt("Start Y", &startY2);
-        ImGui::InputInt("Velocity", &velocity2);
+        ImGui::InputInt("Start X2", &startX2);
+        ImGui::InputInt("Start Y2", &startY2);
+        ImGui::InputInt("Velocity 2", &velocity2);
         ImGui::InputInt("Angle Start", &angleStart);
         ImGui::InputInt("Angle End", &angleEnd);
 
@@ -131,9 +131,9 @@ int main()
         static int velocityStart = 0;
         static int velocityEnd = 0;
 
-        ImGui::InputInt("Start X", &startX3);
-        ImGui::InputInt("Start Y", &startY3);
-        ImGui::InputInt("Angle", &angle3);
+        ImGui::InputInt("Start X3", &startX3);
+        ImGui::InputInt("Start Y3", &startY3);
+        ImGui::InputInt("Angle 3", &angle3);
         ImGui::InputInt("Velocity Start", &velocityStart);
         ImGui::InputInt("Velocity End", &velocityEnd);
 
