@@ -2,11 +2,27 @@
 #include <iostream>
 #include <math.h>
 #include<chrono>
+#include <thread>
+#include <mutex>
 
 #include "Particle.cpp"
 #include "FPS.cpp"
 
 #define PI 3.14159265358979323846
+
+std::mutex mtx;
+
+// make a function that will update a range of particle positions
+void updateParticlePositions(std::vector<Particle>& particles,std::vector<sf::CircleShape>& particleShapes, int start, int end) {
+	while (true) {
+		for (int i = start; i <= end; i++) {
+			particles.at(i).updateParticlePosition();
+			particles.at(i).checkCollision();
+			particleShapes.at(i).setPosition(particles.at(i).getPosX(), particles.at(i).getPosY());
+
+		}
+	}
+}
 
 int main()
 {
@@ -40,13 +56,25 @@ int main()
 
 	std::vector<Particle> particles;
 	std::vector<sf::CircleShape> particleShapes;
+	std::vector<std::thread> threads;
+	int threadCount = 2;
 
-	for (int i = 0; i < 15000; i++) {
+	for (int i = 0; i < 2; i++) {
 		//push particles with random values
-		particles.push_back(Particle(i, rand() % 1280, rand() % 720, rand() % 360, 10));
+		particles.push_back(Particle(i, rand() % 1280, rand() % 720, rand() % 360, 2));
 		particleShapes.push_back(sf::CircleShape(4, 10));
 		particleShapes.at(i).setPosition(particles.at(i).getPosX(), particles.at(i).getPosY());
 		particleShapes.at(i).setFillColor(sf::Color::Red);
+	}
+
+	int particlesPerThread = particles.size() / threadCount;
+	int start = 0;
+	int end = particlesPerThread - 1;
+
+	for (int i = 0; i < 2; i++) {
+		threads.push_back(std::thread(updateParticlePositions, std::ref(particles), std::ref(particleShapes), start, end));
+		start += particlesPerThread;
+		end += particlesPerThread;
 	}
 
 	// Main loop
@@ -62,15 +90,7 @@ int main()
 				window.close();
 		}
 		
-		
-		// Update ball position
-		for (int i = 0; i < particles.size(); i++) {
-			particles[i].updateParticlePosition();
-			particles[i].checkCollision();
-			//std::cout << particles[i].getPosX() << " " << particles[i].getPosY() << std::endl;
-			particleShapes.at(i).setPosition(particles.at(i).getPosX(), particles.at(i).getPosY());
-			//std::cout << particleShapes.at(i).getPosition().x << " " << particleShapes.at(i).getPosition().y << std::endl;
-		}
+		// update the particle positions using multithreading
 
 
 
@@ -86,7 +106,6 @@ int main()
 
 		// Clear the window
 		window.clear();
-
 
 		for (int i = 0; i < particleShapes.size(); i++) {
 			window.draw(particleShapes[i]);
@@ -109,6 +128,10 @@ int main()
 		
 		// Display the contents of the window
 		window.display();
+	}
+
+	for (int i = 0; i < std::thread::hardware_concurrency(); i++) {
+		threads.at(i).join();
 	}
 
 	return 0;
