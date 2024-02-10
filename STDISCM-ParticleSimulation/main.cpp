@@ -139,8 +139,6 @@ int main()
 		window.draw(leftWall);
 		window.draw(rightWall);
 
-
-
 		fps.update();
 
 		if (elapsedFPSTime >= interval) {
