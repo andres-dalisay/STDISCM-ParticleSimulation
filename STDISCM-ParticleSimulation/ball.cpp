@@ -49,10 +49,10 @@ public:
 		ball.move(ballVector.at(0), ballVector.at(1));
 	}
 
-	void checkCollision(){
-		if (ball.getPosition().x > 1080 || ball.getPosition().x < 0)
+	void checkCollision(sf::RenderWindow& window){
+		if (ball.getPosition().x > window.getSize().x || ball.getPosition().x < 0)
 			ballVector.at(0) = -ballVector.at(0);
-		if (ball.getPosition().y > 720 || ball.getPosition().y < 0)
+		if (ball.getPosition().y > window.getSize().y || ball.getPosition().y < 0)
 			ballVector.at(1) = -ballVector.at(1);
 	}
 	

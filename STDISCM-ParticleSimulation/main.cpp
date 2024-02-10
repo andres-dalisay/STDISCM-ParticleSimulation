@@ -125,7 +125,7 @@ int main()
 		
 		// Update ball position
 		ball.moveBall();
-		ball.checkCollision();
+		ball.checkCollision(window);
 
 		// Check for collisions with window boundaries
 		/*if (ball.getPosition().x > window.getSize().x || ball.getPosition().x < 0)
@@ -144,8 +144,8 @@ int main()
 		//window.draw(ball);
 		ball.drawBall(window);
 
-		window.draw(leftWall);
-		window.draw(rightWall);
+		//window.draw(leftWall);
+		//window.draw(rightWall);
 
 		fps.update();
 
