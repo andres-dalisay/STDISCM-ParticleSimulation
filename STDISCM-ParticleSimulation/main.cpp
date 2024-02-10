@@ -3,52 +3,15 @@
 #include <math.h>
 #include<chrono>
 
+#include "FPS.cpp"
+
 #define PI 3.14159265358979323846
-
-class FPS
-{
-public:
-	/// @brief Constructor with initialization.
-	///
-	FPS() : mFrame(0), mFps(0) {}
-
-	/// @brief Update the frame count.
-	/// 
-
-
-	/// @brief Get the current FPS count.
-	/// @return FPS count.
-	const unsigned int getFPS() const { return mFps; }
-
-private:
-	unsigned int mFrame;
-	unsigned int mFps;
-	sf::Clock mClock;
-
-public:
-	void update()
-	{
-		if (mClock.getElapsedTime().asSeconds() >= 1.f)
-		{
-			mFps = mFrame;
-			mFrame = 0;
-			mClock.restart();
-		}
-
-		++mFrame;
-	}
-};
 
 int main()
 {
-
 	// Create the window
 	sf::RenderWindow window(sf::VideoMode(1280, 720), "Particle Simulator");
 	window.setFramerateLimit(60);
-
-	std::chrono::high_resolution_clock::time_point start;
-	std::chrono::high_resolution_clock::time_point end;
-
 
 	auto lastFPSDrawTime = std::chrono::steady_clock::now();
 	const std::chrono::milliseconds interval(500); // 0.5 seconds
@@ -90,13 +53,13 @@ int main()
 	std::cout << "velocityY: " << velocityY;
 
 	// Create the walls
-	sf::RectangleShape leftWall(sf::Vector2f(10.f, 600.f));
-	leftWall.setPosition(0.f, 0.f);
-	leftWall.setFillColor(sf::Color::Green);
+	//sf::RectangleShape leftWall(sf::Vector2f(10.f, 600.f));
+	//leftWall.setPosition(0.f, 0.f);
+	//leftWall.setFillColor(sf::Color::Green);
 
-	sf::RectangleShape rightWall(sf::Vector2f(10.f, 600.f));
-	rightWall.setPosition(790.f, 0.f);
-	rightWall.setFillColor(sf::Color::Green);
+	//sf::RectangleShape rightWall(sf::Vector2f(10.f, 600.f));
+	//rightWall.setPosition(790.f, 0.f);
+	//rightWall.setFillColor(sf::Color::Green);
 
 
 	// Main loop
@@ -126,9 +89,9 @@ int main()
 		if (ball.getPosition().y > window.getSize().y || ball.getPosition().y < 0)
 			velocityY = -velocityY;
 
-		if (ball.getGlobalBounds().intersects(leftWall.getGlobalBounds()) ||
-			ball.getGlobalBounds().intersects(rightWall.getGlobalBounds()))
-			velocityX = -velocityX;
+		//if (ball.getGlobalBounds().intersects(leftWall.getGlobalBounds()) ||
+		//	ball.getGlobalBounds().intersects(rightWall.getGlobalBounds()))
+		//	velocityX = -velocityX;
 
 		// Clear the window
 		window.clear();
@@ -136,8 +99,8 @@ int main()
 		// Draw the ball
 		window.draw(ball);
 
-		window.draw(leftWall);
-		window.draw(rightWall);
+		//window.draw(leftWall);
+		//window.draw(rightWall);
 
 		fps.update();
 
