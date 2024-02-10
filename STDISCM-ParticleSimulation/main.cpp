@@ -41,10 +41,10 @@ int main()
 	std::vector<Particle> particles;
 	std::vector<sf::CircleShape> particleShapes;
 
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 15000; i++) {
 		//push particles with random values
-		particles.push_back(Particle(i, rand() % 1280, rand() % 720, rand() % 360, rand() % 10));
-		particleShapes.push_back(sf::CircleShape(10, 10));
+		particles.push_back(Particle(i, rand() % 1280, rand() % 720, rand() % 360, 10));
+		particleShapes.push_back(sf::CircleShape(4, 10));
 		particleShapes.at(i).setPosition(particles.at(i).getPosX(), particles.at(i).getPosY());
 		particleShapes.at(i).setFillColor(sf::Color::Red);
 	}
