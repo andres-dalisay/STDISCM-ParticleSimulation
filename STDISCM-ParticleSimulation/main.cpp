@@ -192,5 +192,7 @@ int main()
         mainWindow.display();
     }
 
+    ImGui::SFML::Shutdown();
+
     return 0;
 }
