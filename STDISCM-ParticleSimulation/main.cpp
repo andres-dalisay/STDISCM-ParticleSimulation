@@ -7,7 +7,7 @@
 
 void drawInputWindow(sf::RenderWindow& window, sf::Font& font)
 {
-
+    
 }
 
 
