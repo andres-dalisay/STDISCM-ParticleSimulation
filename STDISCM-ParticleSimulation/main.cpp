@@ -111,15 +111,11 @@ int main()
         {
 			std::cout << "CASE1: Adding " << numberParticles << " particles at " << startX << ", " << startY << " with velocity " << velocity << " and angle " << angle << std::endl;
             int distance = sqrt(pow(endX - startX, 2) + pow(endY - startY, 2));
-            int interval = distance / (numberParticles - 1);
-
-            //std::cout << distance;
-            //int interval = numberParticles + 1;
-            //int incrementx = (endX - startX) / interval;
-            //int incrementy = (endY - startY) / interval;
+            int interval = 0;
+            if (numberParticles == 1) interval = 0;
+            else interval = distance / (numberParticles - 1);
             
             for(int i = 0; i < numberParticles; i++){
-				//particles.push_back(Particle(i, startX * incrementx, startY * incrementy, angle, velocity));
 				particles.push_back(Particle(i, startX + interval * i, startY + interval*i, angle, velocity));
 				particleShapes.push_back(sf::CircleShape(4, 10));
 				particleShapes.at(i).setPosition(particles.at(i).getPosX(), particles.at(i).getPosY());
@@ -148,6 +144,19 @@ int main()
         if (ImGui::Button("Add Case 2"))
         {
             std::cout << "CASE2: Adding " << numberParticles << " particles at " << startX2 << ", " << startY2 << " with velocity " << velocity2 << " and angle " << angleStart << " to " << angleEnd << std::endl;
+            int interval = 0;
+            if (numberParticles >1) interval = (angleEnd - angleStart) / (numberParticles - 1);
+                
+            std::cout << interval;
+
+			for (int i = 0; i < numberParticles; i++) {
+				particles.push_back(Particle(i, startX2, startY2, angleStart+(interval*i), velocity2));
+				particleShapes.push_back(sf::CircleShape(4, 10));
+				particleShapes.at(i).setPosition(particles.at(i).getPosX(), particles.at(i).getPosY());
+				particleShapes.at(i).setFillColor(sf::Color::Red);
+				particleCount++;
+			}
+        
         }
 
         ImGui::Text("");
@@ -170,6 +179,11 @@ int main()
         {
 			std::cout << "CASE3: Adding " << numberParticles << " particles at " << startX3 << ", " << startY3 << " with angle " << angle3 << " and velocity " << velocityStart << " to " << velocityEnd << std::endl;
 		}
+
+        if (ImGui::Button("Clear Balls"))
+        {
+            numberParticles = 0;
+        }
 
         ImGui::End();
 
