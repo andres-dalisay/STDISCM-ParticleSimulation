@@ -2,24 +2,12 @@
 #include <iostream>
 #include <math.h>
 #include<chrono>
-#include <thread>
-#include <mutex>
 
 #include "Particle.cpp"
 #include "FPS.cpp"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui-SFML.h"
-
-
-void drawInputWindow(sf::RenderWindow& window, sf::Font& font)
-{
-    
-}
-
-
-
-std::mutex mtx;
 
 // make a function that will update a range of particle positions
 void updateParticlePositions(std::vector<Particle>& particles,std::vector<sf::CircleShape>& particleShapes, int start, int end) {
@@ -65,25 +53,14 @@ int main()
 
 	std::vector<Particle> particles;
 	std::vector<sf::CircleShape> particleShapes;
-	std::vector<std::thread> threads;
-	int threadCount = 2;
+    int particleCount = 5;
 
-	for (int i = 0; i < 2; i++) {
+	for (int i = 0; i < particleCount; i++) {
 		//push particles with random values
 		particles.push_back(Particle(i, rand() % 1280, rand() % 720, rand() % 360, 2));
 		particleShapes.push_back(sf::CircleShape(4, 10));
 		particleShapes.at(i).setPosition(particles.at(i).getPosX(), particles.at(i).getPosY());
 		particleShapes.at(i).setFillColor(sf::Color::Red);
-	}
-
-	int particlesPerThread = particles.size() / threadCount;
-	int start = 0;
-	int end = particlesPerThread - 1;
-
-	for (int i = 0; i < 2; i++) {
-		threads.push_back(std::thread(updateParticlePositions, std::ref(particles), std::ref(particleShapes), start, end));
-		start += particlesPerThread;
-		end += particlesPerThread;
 	}
 
     sf::Clock deltaClock;
@@ -151,10 +128,6 @@ int main()
             std::cout << "CASE2: Adding " << numberParticles << " particles at " << startX2 << ", " << startY2 << " with velocity " << velocity2 << " and angle " << angleStart << " to " << angleEnd << std::endl;
         }
 
-
-
-		// Draw the ball
-		//window.draw(ball);
         ImGui::Text("");
         ImGui::Text("");
 
@@ -196,14 +169,18 @@ int main()
         {
             std::cout << "Adding wall from " << wallStartX << ", " << wallStartY << " to " << wallEndX << ", " << wallEndY << std::endl;
         }
-
-
         ImGui::End();
 
 
 
         // Clear the main window
         mainWindow.clear(sf::Color::Black);
+
+        for (int i = 0; i <= particleCount - 1; i++) {
+            particles.at(i).updateParticlePosition();
+            particles.at(i).checkCollision();
+            particleShapes.at(i).setPosition(particles.at(i).getPosX(), particles.at(i).getPosY());
+        }
 
         for (int i = 0; i < particleShapes.size(); i++) {
             mainWindow.draw(particleShapes[i]);
@@ -229,10 +206,6 @@ int main()
     }
 
     ImGui::SFML::Shutdown();
-
-    for (int i = 0; i < std::thread::hardware_concurrency(); i++) {
-        threads.at(i).join();
-    }
 
     return 0;
 }
