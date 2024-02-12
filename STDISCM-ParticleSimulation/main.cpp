@@ -8,7 +8,16 @@
 #include "Particle.cpp"
 #include "FPS.cpp"
 
-#define PI 3.14159265358979323846
+#include "imgui/imgui.h"
+#include "imgui/imgui-SFML.h"
+
+
+void drawInputWindow(sf::RenderWindow& window, sf::Font& font)
+{
+    
+}
+
+
 
 std::mutex mtx;
 
@@ -26,27 +35,27 @@ void updateParticlePositions(std::vector<Particle>& particles,std::vector<sf::Ci
 
 int main()
 {
-	// Create the window
-	sf::RenderWindow window(sf::VideoMode(1280, 720), "Particle Simulator");
-	window.setFramerateLimit(60);
+    // Create the main window
+    sf::RenderWindow mainWindow(sf::VideoMode(1280, 720), "Particle Simulator");
+    mainWindow.setFramerateLimit(60);
+    ImGui::SFML::Init(mainWindow);
 
-	auto lastFPSDrawTime = std::chrono::steady_clock::now();
-	const std::chrono::milliseconds interval(500); // 0.5 seconds
-	FPS fps;
+    auto lastFPSDrawTime = std::chrono::steady_clock::now();
+    const std::chrono::milliseconds interval(500); // 0.5 seconds
+    FPS fps;
 
-	sf::Font font;
-	if (!font.loadFromFile("OpenSans-VariableFont_wdth,wght.ttf"))
-	{
-		std::cout << "error";
-	}
+    sf::Font font;
+    if (!font.loadFromFile("OpenSans-VariableFont_wdth,wght.ttf"))
+    {
+        std::cout << "error";
+    }
 
-	sf::Text fpsText;
-	fpsText.setFont(font);
-	fpsText.setCharacterSize(100);
-	fpsText.setFillColor(sf::Color::Red);
-	fpsText.setPosition(100, 100);
-	fpsText.setStyle(sf::Text::Bold | sf::Text::Underlined);
-
+    sf::Text fpsText;
+    fpsText.setFont(font);
+    fpsText.setCharacterSize(30);
+    fpsText.setFillColor(sf::Color::Red);
+    fpsText.setPosition(1150, 680);
+    fpsText.setStyle(sf::Text::Bold | sf::Text::Underlined);
 
 	//Particle particle(0, 300, 400, 45, 10);
 	//sf::CircleShape ball(10);
@@ -77,62 +86,153 @@ int main()
 		end += particlesPerThread;
 	}
 
-	// Main loop
-	while (window.isOpen())
-	{
-		auto currentFPSTime = std::chrono::steady_clock::now();
-		auto elapsedFPSTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentFPSTime - lastFPSDrawTime);
+    sf::Clock deltaClock;
+    // Main loop
+    while (mainWindow.isOpen())
+    {
+        auto currentFPSTime = std::chrono::steady_clock::now();
+        auto elapsedFPSTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentFPSTime - lastFPSDrawTime);
 
-		sf::Event event;
-		while (window.pollEvent(event))
-		{
-			if (event.type == sf::Event::Closed)
-				window.close();
+        // Process events
+        sf::Event event;
+        while (mainWindow.pollEvent(event))
+        {
+            ImGui::SFML::ProcessEvent(event);
+            
+            if (event.type == sf::Event::Closed)
+                mainWindow.close();
+            
+        }
+        ImGui::SFML::Update(mainWindow, deltaClock.restart());
+
+        ImGui::Begin("Input Particle", NULL, ImGuiWindowFlags_AlwaysAutoResize);
+        ImGui::SeparatorText("Add Particles");
+
+        //imgui input numbers only
+        static int numberParticles = 0;
+        ImGui::InputInt("Num Particles", &numberParticles);
+        ImGui::Text("");
+        ImGui::Text("");
+
+        static int startX = 0;
+        static int startY = 0;
+        static int velocity = 0;
+        static int angle = 0;
+
+        ImGui::InputInt("Start X1", &startX);
+        ImGui::InputInt("Start Y1", &startY);
+        ImGui::InputInt("Velocity 1", &velocity);
+        ImGui::InputInt("Angle 1", &angle);
+        
+        //imgui button input
+        if (ImGui::Button("Add Case 1"))
+        {
+			std::cout << "CASE1: Adding " << numberParticles << " particles at " << startX << ", " << startY << " with velocity " << velocity << " and angle " << angle << std::endl;
 		}
-		
-		// update the particle positions using multithreading
+
+        ImGui::Text("");
+        ImGui::Text("");
+
+        static int startX2 = 0;
+        static int startY2 = 0;
+        static int velocity2 = 0;
+        static int angleStart = 0;
+        static int angleEnd = 0;
+
+        ImGui::InputInt("Start X2", &startX2);
+        ImGui::InputInt("Start Y2", &startY2);
+        ImGui::InputInt("Velocity 2", &velocity2);
+        ImGui::InputInt("Angle Start", &angleStart);
+        ImGui::InputInt("Angle End", &angleEnd);
+
+        //imgui button input
+        if (ImGui::Button("Add Case 2"))
+        {
+            std::cout << "CASE2: Adding " << numberParticles << " particles at " << startX2 << ", " << startY2 << " with velocity " << velocity2 << " and angle " << angleStart << " to " << angleEnd << std::endl;
+        }
 
 
-
-		// Check for collisions with window boundaries
-		//if (ball.getPosition().x > window.getSize().x || ball.getPosition().x < 0)
-		//	velocityX = -velocityX;
-		//if (ball.getPosition().y > window.getSize().y || ball.getPosition().y < 0)
-		//	velocityY = -velocityY;
-
-		//if (ball.getGlobalBounds().intersects(leftWall.getGlobalBounds()) ||
-		//	ball.getGlobalBounds().intersects(rightWall.getGlobalBounds()))
-		//	velocityX = -velocityX;
-
-		// Clear the window
-		window.clear();
-
-		for (int i = 0; i < particleShapes.size(); i++) {
-			window.draw(particleShapes[i]);
-		}
 
 		// Draw the ball
 		//window.draw(ball);
+        ImGui::Text("");
+        ImGui::Text("");
 
-		//window.draw(leftWall);
-		//window.draw(rightWall);
+        static int startX3 = 0;
+        static int startY3 = 0;
+        static int angle3 = 0;
+        static int velocityStart = 0;
+        static int velocityEnd = 0;
 
-		fps.update();
+        ImGui::InputInt("Start X3", &startX3);
+        ImGui::InputInt("Start Y3", &startY3);
+        ImGui::InputInt("Angle 3", &angle3);
+        ImGui::InputInt("Velocity Start", &velocityStart);
+        ImGui::InputInt("Velocity End", &velocityEnd);
 
-		if (elapsedFPSTime >= interval) {
-			// Update last draw time
-			lastFPSDrawTime = currentFPSTime;
-			fpsText.setString(std::to_string(fps.getFPS()) + " FPS");
+        //imgui button input
+        if (ImGui::Button("Add Case 3"))
+        {
+			std::cout << "CASE3: Adding " << numberParticles << " particles at " << startX3 << ", " << startY3 << " with angle " << angle3 << " and velocity " << velocityStart << " to " << velocityEnd << std::endl;
 		}
-		window.draw(fpsText);
-		
-		// Display the contents of the window
-		window.display();
-	}
 
-	for (int i = 0; i < std::thread::hardware_concurrency(); i++) {
-		threads.at(i).join();
-	}
+        ImGui::End();
 
-	return 0;
+        ImGui::Begin("Input Wall", NULL, ImGuiWindowFlags_AlwaysAutoResize);        
+        ImGui::SeparatorText("Add Walls");
+
+        static int wallStartX = 0;
+        static int wallStartY = 0;
+        static int wallEndX = 0;
+        static int wallEndY = 0;
+
+        ImGui::InputInt("Start X", &wallStartX);
+        ImGui::InputInt("Start Y", &wallStartY);
+        ImGui::InputInt("End X", &wallEndX);
+        ImGui::InputInt("End Y", &wallEndY);
+
+        //imgui button input
+        if (ImGui::Button("Add Wall"))
+        {
+            std::cout << "Adding wall from " << wallStartX << ", " << wallStartY << " to " << wallEndX << ", " << wallEndY << std::endl;
+        }
+
+
+        ImGui::End();
+
+
+
+        // Clear the main window
+        mainWindow.clear(sf::Color::Black);
+
+        for (int i = 0; i < particleShapes.size(); i++) {
+            mainWindow.draw(particleShapes[i]);
+        }
+        //// Draw button
+        //mainWindow.draw(button);
+        //mainWindow.draw(buttonText);
+
+        fps.update();
+
+        if (elapsedFPSTime >= interval)
+        {
+            // Update last draw time
+            lastFPSDrawTime = currentFPSTime;
+            fpsText.setString(std::to_string(fps.getFPS()) + " FPS");
+        }
+        mainWindow.draw(fpsText);
+
+        ImGui::SFML::Render(mainWindow);
+
+        // Display the contents of the main window
+        mainWindow.display();
+    }
+
+    ImGui::SFML::Shutdown();
+
+    for (int i = 0; i < std::thread::hardware_concurrency(); i++) {
+        threads.at(i).join();
+    }
+
+    return 0;
 }
