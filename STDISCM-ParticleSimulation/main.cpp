@@ -6,6 +6,7 @@
 
 #include "Particle.cpp"
 #include "FPS.cpp"
+#include "Wall.cpp"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui-SFML.h"
@@ -55,6 +56,18 @@ int main()
 	std::vector<Particle> particles;
 	std::vector<sf::CircleShape> particleShapes;
     int particleCount = 0;
+
+    std::vector<Wall> walls;
+    std::vector<sf::VertexArray> wallShapes;
+    sf::VertexArray wallLine(sf::Lines, 2);
+    wallLine[0].position = sf::Vector2f(100, 100);
+    wallLine[1].position = sf::Vector2f(300, 300);
+    wallLine[0].color = sf::Color::White;
+    wallLine[1].color = sf::Color::White;
+
+
+    walls.push_back(Wall(100, 100, 300, 300));
+    wallShapes.push_back(wallLine);
 
 	//for (int i = 0; i < particleCount; i++) {
 	//	//push particles with random values
@@ -217,7 +230,12 @@ int main()
         //imgui button input
         if (ImGui::Button("Add Wall"))
         {
-            std::cout << "Adding wall from " << wallStartX << ", " << wallStartY << " to " << wallEndX << ", " << wallEndY << std::endl;
+			std::cout << "Adding wall from " << wallStartX << ", " << wallStartY << " to " << wallEndX << ", " << wallEndY << std::endl;
+            walls.push_back(Wall(wallStartX, wallStartY, wallEndX, wallEndY));
+            sf::VertexArray wall(sf::Lines, 2);
+            wall[0].position = sf::Vector2f(wallStartX, wallStartY);
+            wall[1].position = sf::Vector2f(wallEndX, wallEndY);
+            wallShapes.push_back(wall);
         }
         ImGui::End();
 
@@ -225,6 +243,17 @@ int main()
 
         // Clear the main window
         mainWindow.clear(sf::Color::Black);
+
+        // draw walls
+  //      for (int i = 0; i < walls.size(); i++) {
+  //          
+		//}
+
+        mainWindow.draw(wallLine);
+
+        for (auto& wall : wallShapes) {
+            mainWindow.draw(wall);
+        }
 
         for (int i = 0; i <= particleCount - 1; i++) {
             particles.at(i).updateParticlePosition();
