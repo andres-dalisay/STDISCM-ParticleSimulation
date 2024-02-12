@@ -16,4 +16,21 @@ private:
 	float y1;
 	float x2;
 	float y2;
+
+public:
+	float getX1() {
+		return x1;
+	}
+
+	float getY1() {
+		return y1;
+	}
+
+	float getX2() {
+		return x2;
+	}
+
+	float getY2() {
+		return y2;
+	}
 };

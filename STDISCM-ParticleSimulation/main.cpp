@@ -6,22 +6,23 @@
 
 #include "Particle.cpp"
 #include "FPS.cpp"
-#include "Wall.cpp"
+
+
 
 #include "imgui/imgui.h"
 #include "imgui/imgui-SFML.h"
 
 // make a function that will update a range of particle positions
-void updateParticlePositions(std::vector<Particle>& particles,std::vector<sf::CircleShape>& particleShapes, int start, int end) {
-	while (true) {
-		for (int i = start; i <= end; i++) {
-			particles.at(i).updateParticlePosition();
-			particles.at(i).checkCollision();
-			particleShapes.at(i).setPosition(particles.at(i).getPosX(), particles.at(i).getPosY());
-
-		}
-	}
-}
+//void updateParticlePositions(std::vector<Particle>& particles,std::vector<sf::CircleShape>& particleShapes, int start, int end) {
+//	while (true) {
+//		for (int i = start; i <= end; i++) {
+//			particles.at(i).updateParticlePosition();
+//			particles.at(i).checkCollision();
+//			particleShapes.at(i).setPosition(particles.at(i).getPosX(), particles.at(i).getPosY());
+//
+//		}
+//	}
+//}
 
 int main()
 {
@@ -257,7 +258,7 @@ int main()
 
         for (int i = 0; i <= particleCount - 1; i++) {
             particles.at(i).updateParticlePosition();
-            particles.at(i).checkCollision();
+            particles.at(i).checkCollision(walls);
             particleShapes.at(i).setPosition(particles.at(i).getPosX(), particles.at(i).getPosY());
         }
 
