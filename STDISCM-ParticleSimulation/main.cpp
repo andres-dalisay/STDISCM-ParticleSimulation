@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <math.h>
+#include <cmath>
 #include<chrono>
 
 #include "Particle.cpp"
@@ -53,15 +54,15 @@ int main()
 
 	std::vector<Particle> particles;
 	std::vector<sf::CircleShape> particleShapes;
-    int particleCount = 5;
+    int particleCount = 0;
 
-	for (int i = 0; i < particleCount; i++) {
-		//push particles with random values
-		particles.push_back(Particle(i, rand() % 1280, rand() % 720, rand() % 360, 2));
-		particleShapes.push_back(sf::CircleShape(4, 10));
-		particleShapes.at(i).setPosition(particles.at(i).getPosX(), particles.at(i).getPosY());
-		particleShapes.at(i).setFillColor(sf::Color::Red);
-	}
+	//for (int i = 0; i < particleCount; i++) {
+	//	//push particles with random values
+	//	particles.push_back(Particle(i, rand() % 1280, rand() % 720, rand() % 360, 2));
+	//	particleShapes.push_back(sf::CircleShape(4, 10));
+	//	particleShapes.at(i).setPosition(particles.at(i).getPosX(), particles.at(i).getPosY());
+	//	particleShapes.at(i).setFillColor(sf::Color::Red);
+	//}
 
     sf::Clock deltaClock;
     // Main loop
@@ -93,11 +94,15 @@ int main()
 
         static int startX = 0;
         static int startY = 0;
+        static int endX = 0;
+        static int endY = 0;
         static int velocity = 0;
         static int angle = 0;
 
         ImGui::InputInt("Start X1", &startX);
         ImGui::InputInt("Start Y1", &startY);
+        ImGui::InputInt("End X1", &endX);
+		ImGui::InputInt("End Y1", &endY);
         ImGui::InputInt("Velocity 1", &velocity);
         ImGui::InputInt("Angle 1", &angle);
         
@@ -105,7 +110,24 @@ int main()
         if (ImGui::Button("Add Case 1"))
         {
 			std::cout << "CASE1: Adding " << numberParticles << " particles at " << startX << ", " << startY << " with velocity " << velocity << " and angle " << angle << std::endl;
-		}
+            int distance = sqrt(pow(endX - startX, 2) + pow(endY - startY, 2));
+            int interval = distance / (numberParticles - 1);
+
+            //std::cout << distance;
+            //int interval = numberParticles + 1;
+            //int incrementx = (endX - startX) / interval;
+            //int incrementy = (endY - startY) / interval;
+            
+            for(int i = 0; i < numberParticles; i++){
+				//particles.push_back(Particle(i, startX * incrementx, startY * incrementy, angle, velocity));
+				particles.push_back(Particle(i, startX + interval * i, startY + interval*i, angle, velocity));
+				particleShapes.push_back(sf::CircleShape(4, 10));
+				particleShapes.at(i).setPosition(particles.at(i).getPosX(), particles.at(i).getPosY());
+				particleShapes.at(i).setFillColor(sf::Color::Red);
+                particleCount++;
+            }
+
+        }
 
         ImGui::Text("");
         ImGui::Text("");
