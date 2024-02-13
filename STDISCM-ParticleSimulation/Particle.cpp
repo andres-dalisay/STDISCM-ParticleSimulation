@@ -86,19 +86,22 @@ public:
 		if (posY > 720 || posY < 0)
 			particleVector.at(1) = -particleVector.at(1);
 		
-		// Update your collision detection logic with slanted walls
 		for (int i = 0; i < walls.size(); ++i) {
+			// Check if the particle's trajectory intersects with the wall
 			double distance1 = pointLineDistance(posX, posY, walls[i].getX1(), walls[i].getY1(), walls[i].getX2(), walls[i].getY2());
 			double distance2 = pointLineDistance(posX + particleVector.at(0), posY + particleVector.at(1), walls[i].getX1(), walls[i].getY1(), walls[i].getX2(), walls[i].getY2());
 
-			// Check if particle is currently on or crossing the wall
+			// Check if the particle's trajectory crosses the wall
 			if (distance1 == 0 || distance2 == 0) {
-				// Collision occurred with this wall, handle accordingly
-				// For example, you might want to reverse the direction of your particle
-				// You can modify particleVector based on your requirements
-				// For simplicity, let's just reverse the x and y velocities
-				particleVector.at(0) = -particleVector.at(0);
-				particleVector.at(1) = -particleVector.at(1);
+				// Calculate reflection angle
+				double wallAngle = atan2(walls[i].getY2() - walls[i].getY1(), walls[i].getX2() - walls[i].getX1());
+				double angleOfIncidence = atan2(particleVector.at(1), particleVector.at(0));
+				double reflectionAngle = 2 * wallAngle - angleOfIncidence;
+
+				// Update particle's velocity based on reflection angle
+				double speed = sqrt(particleVector.at(0) * particleVector.at(0) + particleVector.at(1) * particleVector.at(1));
+				particleVector.at(0) = speed * cos(reflectionAngle);
+				particleVector.at(1) = speed * sin(reflectionAngle);
 
 				std::cout << "Collision with wall " << i << " Particle ID: " << id << std::endl;
 
