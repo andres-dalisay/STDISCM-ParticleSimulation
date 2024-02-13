@@ -61,13 +61,13 @@ int main()
     std::vector<Wall> walls;
     std::vector<sf::VertexArray> wallShapes;
     sf::VertexArray wallLine(sf::Lines, 2);
-    wallLine[0].position = sf::Vector2f(100, 100);
+    wallLine[0].position = sf::Vector2f(300, 100);
     wallLine[1].position = sf::Vector2f(300, 300);
     wallLine[0].color = sf::Color::White;
     wallLine[1].color = sf::Color::White;
 
 
-    walls.push_back(Wall(100, 100, 300, 300));
+    walls.push_back(Wall(300, 100, 300, 300));
     wallShapes.push_back(wallLine);
 
 	//for (int i = 0; i < particleCount; i++) {
@@ -195,7 +195,7 @@ int main()
 		    
 			int interval = 0;
 			if (numberParticles > 1) interval = (velocityEnd - velocityStart) / (numberParticles - 1);
-
+            
 			std::cout << interval;
 
 			for (int i = 0; i < numberParticles; i++) {
@@ -256,7 +256,7 @@ int main()
             mainWindow.draw(wall);
         }
 
-        for (int i = 0; i <= particleCount - 1; i++) {
+        for (int i = 0; i < particleCount; i++) {
             particles.at(i).updateParticlePosition();
             particles.at(i).checkCollision(walls);
             particleShapes.at(i).setPosition(particles.at(i).getPosX(), particles.at(i).getPosY());
