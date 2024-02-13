@@ -61,14 +61,24 @@ int main()
     std::vector<Wall> walls;
     std::vector<sf::VertexArray> wallShapes;
     sf::VertexArray wallLine(sf::Lines, 2);
-    wallLine[0].position = sf::Vector2f(100, 100);
+    wallLine[0].position = sf::Vector2f(300, 100);
     wallLine[1].position = sf::Vector2f(300, 300);
     wallLine[0].color = sf::Color::White;
     wallLine[1].color = sf::Color::White;
 
 
-    walls.push_back(Wall(100, 100, 300, 300));
+    walls.push_back(Wall(300, 100, 300, 300));
     wallShapes.push_back(wallLine);
+
+    sf::VertexArray wallLine2(sf::Lines,2);
+    wallLine2[0].position = sf::Vector2f(350, 150);
+    wallLine2[1].position = sf::Vector2f(450, 450);
+    wallLine2[0].color = sf::Color::White;
+    wallLine2[1].color = sf::Color::White;
+
+
+    walls.push_back(Wall(350, 150, 450, 450));
+    wallShapes.push_back(wallLine2);
 
 	//for (int i = 0; i < particleCount; i++) {
 	//	//push particles with random values
@@ -256,14 +266,16 @@ int main()
 		//}
 
         mainWindow.draw(wallLine);
+        mainWindow.draw(wallLine2);
 
         for (auto& wall : wallShapes) {
             mainWindow.draw(wall);
         }
 
-        for (int i = 0; i <= particleCount - 1; i++) {
-            particles.at(i).updateParticlePosition();
+        for (int i = 0; i < particleCount; i++) {
             particles.at(i).checkCollision(walls);
+
+            particles.at(i).updateParticlePosition();
             particleShapes.at(i).setPosition(particles.at(i).getPosX(), particles.at(i).getPosY());
         }
 
