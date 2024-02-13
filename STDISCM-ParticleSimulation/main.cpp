@@ -7,22 +7,8 @@
 #include "Particle.cpp"
 #include "FPS.cpp"
 
-
-
 #include "imgui/imgui.h"
 #include "imgui/imgui-SFML.h"
-
-// make a function that will update a range of particle positions
-//void updateParticlePositions(std::vector<Particle>& particles,std::vector<sf::CircleShape>& particleShapes, int start, int end) {
-//	while (true) {
-//		for (int i = start; i <= end; i++) {
-//			particles.at(i).updateParticlePosition();
-//			particles.at(i).checkCollision();
-//			particleShapes.at(i).setPosition(particles.at(i).getPosX(), particles.at(i).getPosY());
-//
-//		}
-//	}
-//}
 
 int main()
 {
@@ -32,7 +18,7 @@ int main()
     ImGui::SFML::Init(mainWindow);
 
     auto lastFPSDrawTime = std::chrono::steady_clock::now();
-    const std::chrono::milliseconds interval(500); // 0.5 seconds
+    const std::chrono::milliseconds timeInterval(500); // 0.5 seconds
     FPS fps;
 
     sf::Font font;
@@ -48,12 +34,6 @@ int main()
     fpsText.setPosition(1150, 680);
     fpsText.setStyle(sf::Text::Bold | sf::Text::Underlined);
 
-	//Particle particle(0, 300, 400, 45, 10);
-	//sf::CircleShape ball(10);
-	//ball.setPosition(particle.getPosX(), particle.getPosY());
-	//ball.setPointCount(10);
-	//ball.setFillColor(sf::Color::Red);
-
 	std::vector<Particle> particles;
 	std::vector<sf::CircleShape> particleShapes;
     int particleCount = 0;
@@ -61,12 +41,12 @@ int main()
     std::vector<Wall> walls;
     std::vector<sf::VertexArray> wallShapes;
 
+    // SAMPLE WALLS
     sf::VertexArray wallLine(sf::Lines, 2);
     wallLine[0].position = sf::Vector2f(300, 100);
     wallLine[1].position = sf::Vector2f(300, 300);
     wallLine[0].color = sf::Color::White;
     wallLine[1].color = sf::Color::White;
-
 
     walls.push_back(Wall(300, 100, 300, 300));
     wallShapes.push_back(wallLine);
@@ -87,19 +67,12 @@ int main()
 	wallLine3[0].color = sf::Color::White;
 	wallLine3[1].color = sf::Color::White;
 
-
 	walls.push_back(Wall(350, 150, 550, 450));
 	wallShapes.push_back(wallLine3);
 
-	//for (int i = 0; i < particleCount; i++) {
-	//	//push particles with random values
-	//	particles.push_back(Particle(i, rand() % 1280, rand() % 720, rand() % 360, 2));
-	//	particleShapes.push_back(sf::CircleShape(4, 10));
-	//	particleShapes.at(i).setPosition(particles.at(i).getPosX(), particles.at(i).getPosY());
-	//	particleShapes.at(i).setFillColor(sf::Color::Red);
-	//}
-
     sf::Clock deltaClock;
+
+
     // Main loop
     while (mainWindow.isOpen())
     {
@@ -114,9 +87,11 @@ int main()
             
             if (event.type == sf::Event::Closed)
                 mainWindow.close();
-            
         }
+
         ImGui::SFML::Update(mainWindow, deltaClock.restart());
+
+		ImGui::SetNextWindowPos(ImVec2(0, 0));
 
         ImGui::Begin("Input Particle", NULL, ImGuiWindowFlags_AlwaysAutoResize);
         ImGui::SeparatorText("Add Particles");
@@ -241,6 +216,8 @@ int main()
 
         ImGui::End();
 
+		ImGui::SetNextWindowPos(ImVec2(1000, 0));
+
         ImGui::Begin("Input Wall", NULL, ImGuiWindowFlags_AlwaysAutoResize);        
         ImGui::SeparatorText("Add Walls");
 
@@ -269,14 +246,7 @@ int main()
 
 
         // Clear the main window
-        mainWindow.clear(sf::Color::Black);
-
-        // draw walls
-  //      for (int i = 0; i < walls.size(); i++) {
-  //          
-		//}
-
-       
+        mainWindow.clear(sf::Color::Black);    
 
         for (auto& wall : wallShapes) {
             mainWindow.draw(wall);
@@ -292,13 +262,10 @@ int main()
         for (int i = 0; i < particleShapes.size(); i++) {
             mainWindow.draw(particleShapes[i]);
         }
-        //// Draw button
-        //mainWindow.draw(button);
-        //mainWindow.draw(buttonText);
 
         fps.update();
 
-        if (elapsedFPSTime >= interval)
+        if (elapsedFPSTime >= timeInterval)
         {
             // Update last draw time
             lastFPSDrawTime = currentFPSTime;
