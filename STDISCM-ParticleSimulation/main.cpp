@@ -110,22 +110,22 @@ int main()
         static int startY = 0;
         static int endX = 0;
         static int endY = 0;
-        static int velocity = 0;
-        static int angle = 0;
+        static float velocity = 0;
+        static float angle = 0;
 
         ImGui::InputInt("Start X1", &startX);
         ImGui::InputInt("Start Y1", &startY);
         ImGui::InputInt("End X1", &endX);
 		ImGui::InputInt("End Y1", &endY);
-        ImGui::InputInt("Velocity 1", &velocity);
-        ImGui::InputInt("Angle 1", &angle);
+        ImGui::InputFloat("Velocity 1", &velocity);
+        ImGui::InputFloat("Angle 1", &angle);
         
         //imgui button input
         if (ImGui::Button("Add Case 1"))
         {
 			std::cout << "CASE1: Adding " << numberParticles << " particles at " << startX << ", " << startY << " with velocity " << velocity << " and angle " << angle << std::endl;
-            int distance = sqrt(pow(endX - startX, 2) + pow(endY - startY, 2));
-            int interval = 0;
+            float distance = sqrt(pow(endX - startX, 2) + pow(endY - startY, 2));
+            float interval = 0;
             if (numberParticles == 1) interval = 0;
             else interval = distance / (numberParticles - 1);
             
@@ -144,21 +144,21 @@ int main()
 
         static int startX2 = 0;
         static int startY2 = 0;
-        static int velocity2 = 0;
-        static int angleStart = 0;
-        static int angleEnd = 0;
+        static float velocity2 = 0;
+        static float angleStart = 0;
+        static float angleEnd = 0;
 
         ImGui::InputInt("Start X2", &startX2);
         ImGui::InputInt("Start Y2", &startY2);
-        ImGui::InputInt("Velocity 2", &velocity2);
-        ImGui::InputInt("Angle Start", &angleStart);
-        ImGui::InputInt("Angle End", &angleEnd);
+        ImGui::InputFloat("Velocity 2", &velocity2);
+        ImGui::InputFloat("Angle Start", &angleStart);
+        ImGui::InputFloat("Angle End", &angleEnd);
 
         //imgui button input
         if (ImGui::Button("Add Case 2"))
         {
             std::cout << "CASE2: Adding " << numberParticles << " particles at " << startX2 << ", " << startY2 << " with velocity " << velocity2 << " and angle " << angleStart << " to " << angleEnd << std::endl;
-            int interval = 0;
+            float interval = 0;
             if (numberParticles >1) interval = (angleEnd - angleStart) / (numberParticles - 1);
                 
             std::cout << interval;
@@ -178,27 +178,32 @@ int main()
 
         static int startX3 = 0;
         static int startY3 = 0;
-        static int angle3 = 0;
-        static int velocityStart = 0;
-        static int velocityEnd = 0;
+        static float angle3 = 0;
+        static float velocityStart = 0;
+        static float velocityEnd = 0;
 
         ImGui::InputInt("Start X3", &startX3);
         ImGui::InputInt("Start Y3", &startY3);
-        ImGui::InputInt("Angle 3", &angle3);
-        ImGui::InputInt("Velocity Start", &velocityStart);
-        ImGui::InputInt("Velocity End", &velocityEnd);
+        ImGui::InputFloat("Angle 3", &angle3);
+        ImGui::InputFloat("Velocity Start", &velocityStart);
+        ImGui::InputFloat("Velocity End", &velocityEnd);
 
         //imgui button input
         if (ImGui::Button("Add Case 3"))
         {
 			std::cout << "CASE3: Adding " << numberParticles << " particles at " << startX3 << ", " << startY3 << " with angle " << angle3 << " and velocity " << velocityStart << " to " << velocityEnd << std::endl;
 		    
-			int interval = 0;
-			if (numberParticles > 1) interval = (velocityEnd - velocityStart) / (numberParticles - 1);
+			float interval = 0;
+            if (numberParticles > 1) {
+                interval = (velocityEnd - velocityStart) / (numberParticles - 1);
+            }
+                
 
 			std::cout << interval;
 
 			for (int i = 0; i < numberParticles; i++) {
+                //std::cout << "Velocity: " << velocityStart + (interval * i) << " | Angle: " << angle3 << std::endl;
+                std::cout << "velocityStart: " << velocityStart << " | interval: " << interval << " | i: " << i << " | velocity: " << velocityStart + (interval * i) << std::endl;  
 				particles.push_back(Particle(i, startX3, startY3, angle3, velocityStart + (interval * i)));
 				particleShapes.push_back(sf::CircleShape(4, 10));
 				particleShapes.at(i).setPosition(particles.at(i).getPosX(), particles.at(i).getPosY());

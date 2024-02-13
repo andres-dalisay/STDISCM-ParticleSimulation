@@ -15,6 +15,7 @@ public:
 		this->speed = speed;
 		this->posX = posX;
 		this->posY = posY;
+		//std::cout << "ID: " << this->id << " | speed: " << this->speed << std::endl;
 
 		setParticleVector();
 	}
