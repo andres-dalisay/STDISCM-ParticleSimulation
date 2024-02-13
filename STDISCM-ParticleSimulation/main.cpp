@@ -60,6 +60,7 @@ int main()
 
     std::vector<Wall> walls;
     std::vector<sf::VertexArray> wallShapes;
+
     sf::VertexArray wallLine(sf::Lines, 2);
     wallLine[0].position = sf::Vector2f(300, 100);
     wallLine[1].position = sf::Vector2f(300, 300);
@@ -71,14 +72,24 @@ int main()
     wallShapes.push_back(wallLine);
 
     sf::VertexArray wallLine2(sf::Lines,2);
-    wallLine2[0].position = sf::Vector2f(350, 150);
-    wallLine2[1].position = sf::Vector2f(450, 450);
+    wallLine2[0].position = sf::Vector2f(650, 650);
+    wallLine2[1].position = sf::Vector2f(350, 650);
     wallLine2[0].color = sf::Color::White;
     wallLine2[1].color = sf::Color::White;
 
 
-    walls.push_back(Wall(350, 150, 450, 450));
+    walls.push_back(Wall(650, 650, 350, 650));
     wallShapes.push_back(wallLine2);
+
+	sf::VertexArray wallLine3(sf::Lines, 2);
+	wallLine3[0].position = sf::Vector2f(350, 150);
+	wallLine3[1].position = sf::Vector2f(550, 450);
+	wallLine3[0].color = sf::Color::White;
+	wallLine3[1].color = sf::Color::White;
+
+
+	walls.push_back(Wall(350, 150, 550, 450));
+	wallShapes.push_back(wallLine3);
 
 	//for (int i = 0; i < particleCount; i++) {
 	//	//push particles with random values
@@ -265,8 +276,7 @@ int main()
   //          
 		//}
 
-        mainWindow.draw(wallLine);
-        mainWindow.draw(wallLine2);
+       
 
         for (auto& wall : wallShapes) {
             mainWindow.draw(wall);

@@ -88,27 +88,33 @@ public:
 			particleVector.at(1) = -particleVector.at(1);
 		
 		for (int i = 0; i < walls.size(); ++i) {
-			// Check if the particle's trajectory intersects with the wall
-			double distance1 = pointLineDistance(posX, posY, walls[i].getX1(), walls[i].getY1(), walls[i].getX2(), walls[i].getY2());
-			double distance2 = pointLineDistance(posX + particleVector.at(0), posY + particleVector.at(1), walls[i].getX1(), walls[i].getY1(), walls[i].getX2(), walls[i].getY2());
+			if (pointLineDistance(posX, posY, walls[i].getX1(), walls[i].getY1(), walls[i].getX2(), walls[i].getY2()) < 5) {
+				//account for the particle angle when bouncing
+				/*float angle = atan2(particleVector.at(1), particleVector.at(0));
+				float wallAngle = atan2(walls[i].getY2() - walls[i].getY1(), walls[i].getX2() - walls[i].getX1());
+				float newAngle = 2 * wallAngle - angle;
+				particleVector.at(0) = cos(newAngle) * speed;
+				particleVector.at(1) = sin(newAngle) * speed;*/
 
-			// Check if the particle's trajectory crosses the wall
-			if (distance1 == 0 || distance2 == 0) {
-				// Calculate reflection angle
-				double wallAngle = atan2(walls[i].getY2() - walls[i].getY1(), walls[i].getX2() - walls[i].getX1());
-				double angleOfIncidence = atan2(particleVector.at(1), particleVector.at(0));
-				double reflectionAngle = 2 * wallAngle - angleOfIncidence;
 
-				// Update particle's velocity based on reflection angle
-				double speed = sqrt(particleVector.at(0) * particleVector.at(0) + particleVector.at(1) * particleVector.at(1));
-				particleVector.at(0) = speed * cos(reflectionAngle);
-				particleVector.at(1) = speed * sin(reflectionAngle);
+			
+				// Calculate the angle of the wall
+				float wallAngle = atan2(walls[i].getY2() - walls[i].getY1(), walls[i].getX2() - walls[i].getX1());
+
+				// Calculate the angle of incidence
+				float angleOfIncidence = atan2(particleVector[1], particleVector[0]);
+
+				// Calculate the angle between the wall and the particle's velocity vector
+				float angleDiff = angleOfIncidence - wallAngle;
+
+				// Calculate the angle of reflection
+				float angleOfReflection = angleOfIncidence - 2 * angleDiff;
+
+				// Update the particle's angle and velocity based on the reflection
+				particleVector[0] = cos(angleOfReflection) * speed;
+				particleVector[1] = sin(angleOfReflection) * speed;
 
 				std::cout << "Collision with wall " << i << " Particle ID: " << id << std::endl;
-
-				// Exit the loop if you want to handle only one collision per frame
-				// Remove this line if you want to handle multiple collisions per frame
-				break;
 			}
 		}
 
