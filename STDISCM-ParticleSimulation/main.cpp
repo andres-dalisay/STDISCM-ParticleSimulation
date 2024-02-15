@@ -2,13 +2,39 @@
 #include <iostream>
 #include <math.h>
 #include <cmath>
-#include<chrono>
+#include <chrono>
+#include <thread>
+#include <mutex>
+
 
 #include "Particle.cpp"
 #include "FPS.cpp"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui-SFML.h"
+
+std::mutex mtx;
+std::condition_variable cv;
+bool readyToRender = false;
+int threadDoneCount = 0;
+const int numThreads = 4;
+
+
+void updateParticles(std::vector<Particle>& particles, std::vector<sf::CircleShape>& particleShapes, std::vector<Wall>& walls, int startIndex, int endIndex) {
+    while (true){
+        {
+			std::unique_lock lk(mtx);
+			for (int i = startIndex; i < endIndex; i++) {
+				particles.at(i).checkCollision(walls);
+				particles.at(i).updateParticlePosition();
+				particleShapes.at(i).setPosition(particles.at(i).getPosX(), particles.at(i).getPosY());
+			}
+			readyToRender = true;
+			cv.notify_one();
+        }
+    }    
+
+}
 
 int main()
 {
@@ -69,9 +95,26 @@ int main()
 
 	walls.push_back(Wall(350, 150, 550, 450));
 	wallShapes.push_back(wallLine3);
+    for (int i = 0; i < 4; i++) {
+		particles.push_back(Particle(i, 100, 100, 0, 1));
+		particleShapes.push_back(sf::CircleShape(4, 10));
+		particleShapes.at(i).setPosition(particles.at(i).getPosX(), particles.at(i).getPosY());
+		particleShapes.at(i).setFillColor(sf::Color::Red);
+		particleCount++;
+	}
+
+    //std::thread::hardware_concurrency();
+	const int particlesPerThread = particleCount / numThreads;
+	std::vector<std::thread> threads;
+
+	for (int i = 0; i < numThreads; ++i) {
+		int startIndex = i * particlesPerThread;
+		int endIndex = (i == numThreads - 1) ? particleCount : (i + 1) * particlesPerThread;
+		threads.emplace_back(updateParticles, std::ref(particles), std::ref(particleShapes), std::ref(walls), startIndex, endIndex);
+	}
+
 
     sf::Clock deltaClock;
-
 
     // Main loop
     while (mainWindow.isOpen())
@@ -252,16 +295,20 @@ int main()
             mainWindow.draw(wall);
         }
 
-        for (int i = 0; i < particleCount; i++) {
+        /*for (int i = 0; i < particleCount; i++) {
             particles.at(i).checkCollision(walls);
 
             particles.at(i).updateParticlePosition();
             particleShapes.at(i).setPosition(particles.at(i).getPosX(), particles.at(i).getPosY());
-        }
+        }*/
 
+        std::unique_lock lock(mtx);
+        cv.wait(lock, [] { return readyToRender; });
         for (int i = 0; i < particleShapes.size(); i++) {
             mainWindow.draw(particleShapes[i]);
         }
+        readyToRender = false;
+        lock.unlock();
 
         fps.update();
 
@@ -278,6 +325,10 @@ int main()
         // Display the contents of the main window
         mainWindow.display();
     }
+
+	for (auto& thread : threads) {
+		thread.join();
+	}
 
     ImGui::SFML::Shutdown();
 
