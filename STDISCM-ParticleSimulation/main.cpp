@@ -16,22 +16,28 @@
 std::mutex mtx;
 std::condition_variable cv;
 bool readyToRender = false;
-int threadDoneCount = 0;
-const int numThreads = 4;
+bool readyToCompute = true;
+int threadsDone = 0;
+const int numThreads = 16;
+int numInitParticles = 40;
+int currentParticle = 0;
 
 
-void updateParticles(std::vector<Particle>& particles, std::vector<sf::CircleShape>& particleShapes, std::vector<Wall>& walls, int startIndex, int endIndex) {
+void updateParticles(std::vector<Particle>& particles, std::vector<sf::CircleShape>& particleShapes, std::vector<Wall>& walls) {
     while (true){
         {
-			std::unique_lock lk(mtx);
-			for (int i = startIndex; i < endIndex; i++) {
-				particles.at(i).checkCollision(walls);
-				particles.at(i).updateParticlePosition();
-				particleShapes.at(i).setPosition(particles.at(i).getPosX(), particles.at(i).getPosY());
-			}
-			readyToRender = true;
-			cv.notify_one();
-        }
+            std::unique_lock lk(mtx);
+            cv.wait(lk, [] { return readyToCompute; });
+            particles.at(currentParticle).checkCollision(walls);
+            particles.at(currentParticle).updateParticlePosition();
+            particleShapes.at(currentParticle).setPosition(particles.at(currentParticle).getPosX(), particles.at(currentParticle).getPosY());
+            currentParticle++;
+            if (currentParticle > particles.size() - 1) {
+                readyToRender = true;
+                readyToCompute = false;
+                cv.notify_one();
+            }
+        }      
     }    
 
 }
@@ -56,7 +62,7 @@ int main()
     sf::Text fpsText;
     fpsText.setFont(font);
     fpsText.setCharacterSize(30);
-    fpsText.setFillColor(sf::Color::Red);
+    fpsText.setFillColor(sf::Color::Green);
     fpsText.setPosition(1150, 680);
     fpsText.setStyle(sf::Text::Bold | sf::Text::Underlined);
 
@@ -95,8 +101,9 @@ int main()
 
 	walls.push_back(Wall(350, 150, 550, 450));
 	wallShapes.push_back(wallLine3);
-    for (int i = 0; i < 4; i++) {
-		particles.push_back(Particle(i, 100, 100, 0, 1));
+    for (int i = 0; i < numInitParticles; i++) {
+		//particles.push_back(Particle(i, 100, 100, i, 5));
+        particles.push_back(Particle(i, rand() % 1280, rand() % 720, rand() % 360, 5));
 		particleShapes.push_back(sf::CircleShape(4, 10));
 		particleShapes.at(i).setPosition(particles.at(i).getPosX(), particles.at(i).getPosY());
 		particleShapes.at(i).setFillColor(sf::Color::Red);
@@ -108,9 +115,7 @@ int main()
 	std::vector<std::thread> threads;
 
 	for (int i = 0; i < numThreads; ++i) {
-		int startIndex = i * particlesPerThread;
-		int endIndex = (i == numThreads - 1) ? particleCount : (i + 1) * particlesPerThread;
-		threads.emplace_back(updateParticles, std::ref(particles), std::ref(particleShapes), std::ref(walls), startIndex, endIndex);
+		threads.emplace_back(updateParticles, std::ref(particles), std::ref(particleShapes), std::ref(walls));
 	}
 
 
@@ -307,8 +312,12 @@ int main()
         for (int i = 0; i < particleShapes.size(); i++) {
             mainWindow.draw(particleShapes[i]);
         }
+        readyToCompute = true;
         readyToRender = false;
+        currentParticle = 0;
+        cv.notify_all();
         lock.unlock();
+
 
         fps.update();
 

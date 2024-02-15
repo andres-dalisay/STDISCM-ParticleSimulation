@@ -114,7 +114,7 @@ public:
 				particleVector[0] = cos(angleOfReflection) * speed;
 				particleVector[1] = sin(angleOfReflection) * speed;
 
-				std::cout << "Collision with wall " << i << " Particle ID: " << id << std::endl;
+				//std::cout << "Collision with wall " << i << " Particle ID: " << id << std::endl;
 			}
 		}
 
