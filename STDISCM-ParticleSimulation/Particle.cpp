@@ -89,14 +89,6 @@ public:
 		
 		for (int i = 0; i < walls.size(); ++i) {
 			if (pointLineDistance(posX, posY, walls[i].getX1(), walls[i].getY1(), walls[i].getX2(), walls[i].getY2()) < 5) {
-				//account for the particle angle when bouncing
-				/*float angle = atan2(particleVector.at(1), particleVector.at(0));
-				float wallAngle = atan2(walls[i].getY2() - walls[i].getY1(), walls[i].getX2() - walls[i].getX1());
-				float newAngle = 2 * wallAngle - angle;
-				particleVector.at(0) = cos(newAngle) * speed;
-				particleVector.at(1) = sin(newAngle) * speed;*/
-
-
 			
 				// Calculate the angle of the wall
 				float wallAngle = atan2(walls[i].getY2() - walls[i].getY1(), walls[i].getX2() - walls[i].getX1());
@@ -116,38 +108,7 @@ public:
 
 				//std::cout << "Collision with wall " << i << " Particle ID: " << id << std::endl;
 			}
-		}
-
-
-
-		//for (size_t i = 0; i < walls.size(); ++i) {
-		//	// Check for collision with each wall
-		//	if (posX >= std::min(walls[i].getX1(), walls[i].getX2()) &&
-		//		posX <= std::max(walls[i].getX1(), walls[i].getX2()) &&
-		//		posY >= std::min(walls[i].getY1(), walls[i].getY2()) &&
-		//		posY <= std::max(walls[i].getY1(), walls[i].getY2())) {
-		//		particleVector.at(0) = -particleVector.at(0);
-		//		particleVector.at(1) = -particleVector.at(1);
-
-		//		std::cout << "Collision with wall " << i << " Particle ID: " << id << std::endl;
-
-		//		break;
-		//	}
-		//}
-
-
-		//if (posX > walls.at(i).getX2() && posX < walls.at(i).getX1() &&
-		//	posY > walls.at(i).getY2() && posY < walls.at(i).getY1()) {
-		//	// if particle is colliding with wall, reverse the velocity
-		//	particleVector.at(0) = -particleVector.at(0);
-		//	particleVector.at(1) = -particleVector.at(1);
-		//}
-
-
-		//if (ball.getGlobalBounds().intersects(leftWall.getGlobalBounds()) ||
-		//	ball.getGlobalBounds().intersects(rightWall.getGlobalBounds()))
-		//	velocityX = -velocityX;
-		
+		}		
 	}
 
 	float getPosX() {

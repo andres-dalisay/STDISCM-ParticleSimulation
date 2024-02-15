@@ -19,7 +19,7 @@ bool readyToRender = false;
 bool readyToCompute = true;
 int threadsDone = 0;
 const int numThreads = 16;
-int numInitParticles = 40;
+int numInitParticles = 100;
 int currentParticle = 0;
 
 
@@ -209,7 +209,7 @@ int main()
 
 			for (int i = 0; i < numberParticles; i++) {
 				particles.push_back(Particle(i, startX2, startY2, angleStart+(interval*i), velocity2));
-				particleShapes.push_back(sf::CircleShape(4, 10));
+				particleShapes.push_back(sf::CircleShape(2, 10));
 				particleShapes.at(i).setPosition(particles.at(i).getPosX(), particles.at(i).getPosY());
 				particleShapes.at(i).setFillColor(sf::Color::Red);
 				particleCount++;
