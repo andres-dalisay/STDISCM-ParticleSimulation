@@ -18,7 +18,7 @@ std::condition_variable cv;
 bool readyToRender = false;
 bool readyToCompute = true;
 int threadsDone = 0;
-const int numThreads = 16;
+const int numThreads = 2;
 int numInitParticles = 100;
 int currentParticle = 0;
 
@@ -27,7 +27,7 @@ void updateParticles(std::vector<Particle>& particles, std::vector<sf::CircleSha
     while (true){
         {
             std::unique_lock lk(mtx);
-            cv.wait(lk, [] { return readyToCompute; });
+            cv.wait(lk, [&particles] { return readyToCompute && particles.size() > 0; });
             particles.at(currentParticle).checkCollision(walls);
             particles.at(currentParticle).updateParticlePosition();
             particleShapes.at(currentParticle).setPosition(particles.at(currentParticle).getPosX(), particles.at(currentParticle).getPosY());
@@ -101,14 +101,14 @@ int main()
 
 	walls.push_back(Wall(350, 150, 550, 450));
 	wallShapes.push_back(wallLine3);
-    for (int i = 0; i < numInitParticles; i++) {
-		//particles.push_back(Particle(i, 100, 100, i, 5));
-        particles.push_back(Particle(i, rand() % 1280, rand() % 720, rand() % 360, 5));
-		particleShapes.push_back(sf::CircleShape(4, 10));
-		particleShapes.at(i).setPosition(particles.at(i).getPosX(), particles.at(i).getPosY());
-		particleShapes.at(i).setFillColor(sf::Color::Red);
-		particleCount++;
-	}
+ //   for (int i = 0; i < numInitParticles; i++) {
+	//	//particles.push_back(Particle(i, 100, 100, i, 5));
+ //       particles.push_back(Particle(i, rand() % 1280, rand() % 720, rand() % 360, 5));
+	//	particleShapes.push_back(sf::CircleShape(4, 10));
+	//	particleShapes.at(i).setPosition(particles.at(i).getPosX(), particles.at(i).getPosY());
+	//	particleShapes.at(i).setFillColor(sf::Color::Red);
+	//	particleCount++;
+	//}
 
     //std::thread::hardware_concurrency();
 	const int particlesPerThread = particleCount / numThreads;
@@ -181,6 +181,8 @@ int main()
                 particleCount++;
             }
 
+            cv.notify_all();
+
         }
 
         ImGui::Text("");
@@ -214,6 +216,8 @@ int main()
 				particleShapes.at(i).setFillColor(sf::Color::Red);
 				particleCount++;
 			}
+
+            cv.notify_all();
         
         }
 
@@ -254,6 +258,8 @@ int main()
 				particleShapes.at(i).setFillColor(sf::Color::Red);
 				particleCount++;
 			}
+
+            cv.notify_all();
         }
 
         if (ImGui::Button("Clear Balls"))
@@ -307,17 +313,18 @@ int main()
             particleShapes.at(i).setPosition(particles.at(i).getPosX(), particles.at(i).getPosY());
         }*/
 
-        std::unique_lock lock(mtx);
-        cv.wait(lock, [] { return readyToRender; });
-        for (int i = 0; i < particleShapes.size(); i++) {
-            mainWindow.draw(particleShapes[i]);
+        if (particleShapes.size() > 0) {
+            std::unique_lock lock(mtx);
+            cv.wait(lock, [] { return readyToRender; });
+            for (int i = 0; i < particleShapes.size(); i++) {
+                mainWindow.draw(particleShapes[i]);
+            }
+            readyToCompute = true;
+            readyToRender = false;
+            currentParticle = 0;
+            cv.notify_all();
+            lock.unlock();
         }
-        readyToCompute = true;
-        readyToRender = false;
-        currentParticle = 0;
-        cv.notify_all();
-        lock.unlock();
-
 
         fps.update();
 
