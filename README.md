@@ -12,11 +12,10 @@ This is a particle simulator built using C++ using the SFML and Dear ImGui libra
 
 
 ## Installation
-1. Extract the contents of the zip files found in the zip folder. 
-2. Paste the extracted files in your C: Drive.
-3. Open the solution file in Visual Studio 2022.
-4. Run in the Release configuration.
-
+1. Clone the repository.
+2. Open the .sln file in Visual Studio 2022.
+3. Before running the program, make sure to set the build configuration to Release and the platform to x64.
+4. Run the program.
 
 
 
