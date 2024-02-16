@@ -295,6 +295,12 @@ int main()
             wall[1].position = sf::Vector2f(wallEndX, wallEndY);
             wallShapes.push_back(wall);
         }
+
+        if (ImGui::Button("Clear Walls"))
+        {
+            walls.clear();
+            wallShapes.clear();
+        }
         ImGui::End();
 
 
