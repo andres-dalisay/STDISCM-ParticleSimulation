@@ -1,3 +1,5 @@
+// This code has been adapted from the following source: https://gist.github.com/kenpower/7233967
+
 #include <SFML/Graphics.hpp>
 #include<chrono>
 

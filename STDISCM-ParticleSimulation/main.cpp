@@ -17,9 +17,8 @@ std::mutex mtx;
 std::condition_variable cv;
 bool readyToRender = false;
 bool readyToCompute = true;
-int threadsDone = 0;
-const int numThreads = 2;
-int numInitParticles = 100;
+const int numThreads = std::thread::hardware_concurrency();
+//int numInitParticles = 100;
 int currentParticle = 0;
 
 
@@ -39,7 +38,6 @@ void updateParticles(std::vector<Particle>& particles, std::vector<sf::CircleSha
             }
         }      
     }    
-
 }
 
 int main()
@@ -74,33 +72,35 @@ int main()
     std::vector<sf::VertexArray> wallShapes;
 
     // SAMPLE WALLS
-    sf::VertexArray wallLine(sf::Lines, 2);
-    wallLine[0].position = sf::Vector2f(300, 100);
-    wallLine[1].position = sf::Vector2f(300, 300);
-    wallLine[0].color = sf::Color::White;
-    wallLine[1].color = sf::Color::White;
+ //   sf::VertexArray wallLine(sf::Lines, 2);
+ //   wallLine[0].position = sf::Vector2f(300, 100);
+ //   wallLine[1].position = sf::Vector2f(300, 300);
+ //   wallLine[0].color = sf::Color::White;
+ //   wallLine[1].color = sf::Color::White;
 
-    walls.push_back(Wall(300, 100, 300, 300));
-    wallShapes.push_back(wallLine);
+ //   walls.push_back(Wall(300, 100, 300, 300));
+ //   wallShapes.push_back(wallLine);
 
-    sf::VertexArray wallLine2(sf::Lines,2);
-    wallLine2[0].position = sf::Vector2f(650, 650);
-    wallLine2[1].position = sf::Vector2f(350, 650);
-    wallLine2[0].color = sf::Color::White;
-    wallLine2[1].color = sf::Color::White;
+ //   sf::VertexArray wallLine2(sf::Lines,2);
+ //   wallLine2[0].position = sf::Vector2f(650, 650);
+ //   wallLine2[1].position = sf::Vector2f(350, 650);
+ //   wallLine2[0].color = sf::Color::White;
+ //   wallLine2[1].color = sf::Color::White;
 
 
-    walls.push_back(Wall(650, 650, 350, 650));
-    wallShapes.push_back(wallLine2);
+ //   walls.push_back(Wall(650, 650, 350, 650));
+ //   wallShapes.push_back(wallLine2);
 
-	sf::VertexArray wallLine3(sf::Lines, 2);
-	wallLine3[0].position = sf::Vector2f(350, 150);
-	wallLine3[1].position = sf::Vector2f(550, 450);
-	wallLine3[0].color = sf::Color::White;
-	wallLine3[1].color = sf::Color::White;
+	//sf::VertexArray wallLine3(sf::Lines, 2);
+	//wallLine3[0].position = sf::Vector2f(350, 150);
+	//wallLine3[1].position = sf::Vector2f(550, 450);
+	//wallLine3[0].color = sf::Color::White;
+	//wallLine3[1].color = sf::Color::White;
 
-	walls.push_back(Wall(350, 150, 550, 450));
-	wallShapes.push_back(wallLine3);
+	//walls.push_back(Wall(350, 150, 550, 450));
+	//wallShapes.push_back(wallLine3);
+    
+    // SAMPLE PARTICLES
  //   for (int i = 0; i < numInitParticles; i++) {
 	//	//particles.push_back(Particle(i, 100, 100, i, 5));
  //       particles.push_back(Particle(i, rand() % 1280, rand() % 720, rand() % 360, 5));
@@ -110,8 +110,6 @@ int main()
 	//	particleCount++;
 	//}
 
-    //std::thread::hardware_concurrency();
-	const int particlesPerThread = particleCount / numThreads;
 	std::vector<std::thread> threads;
 
 	for (int i = 0; i < numThreads; ++i) {
@@ -211,7 +209,7 @@ int main()
 
 			for (int i = 0; i < numberParticles; i++) {
 				particles.push_back(Particle(i, startX2, startY2, angleStart+(interval*i), velocity2));
-				particleShapes.push_back(sf::CircleShape(2, 10));
+				particleShapes.push_back(sf::CircleShape(4, 10));
 				particleShapes.at(i).setPosition(particles.at(i).getPosX(), particles.at(i).getPosY());
 				particleShapes.at(i).setFillColor(sf::Color::Red);
 				particleCount++;
@@ -265,6 +263,8 @@ int main()
         if (ImGui::Button("Clear Balls"))
         {
             particleCount = 0;
+            particles.clear();
+            particleShapes.clear();
             //clear array of balls
         }
 
@@ -312,7 +312,7 @@ int main()
             particles.at(i).updateParticlePosition();
             particleShapes.at(i).setPosition(particles.at(i).getPosX(), particles.at(i).getPosY());
         }*/
-
+    
         if (particleShapes.size() > 0) {
             std::unique_lock lock(mtx);
             cv.wait(lock, [] { return readyToRender; });
