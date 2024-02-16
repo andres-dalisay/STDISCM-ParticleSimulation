@@ -159,7 +159,7 @@ int main()
         ImGui::InputInt("Start Y1", &startY);
         ImGui::InputInt("End X1", &endX);
 		ImGui::InputInt("End Y1", &endY);
-        ImGui::InputFloat("Velocity 1", &velocity);
+        ImGui::SliderFloat("Velocity 1", &velocity, 0, 11);
         ImGui::InputFloat("Angle 1", &angle);
         
         //imgui button input
@@ -194,7 +194,8 @@ int main()
 
         ImGui::InputInt("Start X2", &startX2);
         ImGui::InputInt("Start Y2", &startY2);
-        ImGui::InputFloat("Velocity 2", &velocity2);
+        /*ImGui::InputFloat("Velocity 2", &velocity2);*/
+        ImGui::SliderFloat("Velocity 2", &velocity2, 0, 11);
         ImGui::InputFloat("Angle Start", &angleStart);
         ImGui::InputFloat("Angle End", &angleEnd);
 
@@ -231,8 +232,10 @@ int main()
         ImGui::InputInt("Start X3", &startX3);
         ImGui::InputInt("Start Y3", &startY3);
         ImGui::InputFloat("Angle 3", &angle3);
-        ImGui::InputFloat("Velocity Start", &velocityStart);
-        ImGui::InputFloat("Velocity End", &velocityEnd);
+        ImGui::SliderFloat("Velocity Start", &velocityStart, 0, 12);
+        ImGui::SliderFloat("Velocity End", &velocityEnd, 0, 12);
+        
+        
 
         //imgui button input
         if (ImGui::Button("Add Case 3"))
