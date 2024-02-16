@@ -2,13 +2,43 @@
 #include <iostream>
 #include <math.h>
 #include <cmath>
-#include<chrono>
+#include <chrono>
+#include <thread>
+#include <mutex>
+
 
 #include "Particle.cpp"
 #include "FPS.cpp"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui-SFML.h"
+
+std::mutex mtx;
+std::condition_variable cv;
+bool readyToRender = false;
+bool readyToCompute = true;
+const int numThreads = std::thread::hardware_concurrency();
+//int numInitParticles = 100;
+int currentParticle = 0;
+
+
+void updateParticles(std::vector<Particle>& particles, std::vector<sf::CircleShape>& particleShapes, std::vector<Wall>& walls) {
+    while (true){
+        {
+            std::unique_lock lk(mtx);
+            cv.wait(lk, [&particles] { return readyToCompute && particles.size() > 0; });
+            particles.at(currentParticle).checkCollision(walls);
+            particles.at(currentParticle).updateParticlePosition();
+            particleShapes.at(currentParticle).setPosition(particles.at(currentParticle).getPosX(), particles.at(currentParticle).getPosY());
+            currentParticle++;
+            if (currentParticle > particles.size() - 1) {
+                readyToRender = true;
+                readyToCompute = false;
+                cv.notify_one();
+            }
+        }      
+    }    
+}
 
 int main()
 {
@@ -30,7 +60,7 @@ int main()
     sf::Text fpsText;
     fpsText.setFont(font);
     fpsText.setCharacterSize(30);
-    fpsText.setFillColor(sf::Color::Red);
+    fpsText.setFillColor(sf::Color::Green);
     fpsText.setPosition(1150, 680);
     fpsText.setStyle(sf::Text::Bold | sf::Text::Underlined);
 
@@ -42,36 +72,52 @@ int main()
     std::vector<sf::VertexArray> wallShapes;
 
     // SAMPLE WALLS
-    sf::VertexArray wallLine(sf::Lines, 2);
-    wallLine[0].position = sf::Vector2f(300, 100);
-    wallLine[1].position = sf::Vector2f(300, 300);
-    wallLine[0].color = sf::Color::White;
-    wallLine[1].color = sf::Color::White;
+ //   sf::VertexArray wallLine(sf::Lines, 2);
+ //   wallLine[0].position = sf::Vector2f(300, 100);
+ //   wallLine[1].position = sf::Vector2f(300, 300);
+ //   wallLine[0].color = sf::Color::White;
+ //   wallLine[1].color = sf::Color::White;
 
-    walls.push_back(Wall(300, 100, 300, 300));
-    wallShapes.push_back(wallLine);
+ //   walls.push_back(Wall(300, 100, 300, 300));
+ //   wallShapes.push_back(wallLine);
 
-    sf::VertexArray wallLine2(sf::Lines,2);
-    wallLine2[0].position = sf::Vector2f(650, 650);
-    wallLine2[1].position = sf::Vector2f(350, 650);
-    wallLine2[0].color = sf::Color::White;
-    wallLine2[1].color = sf::Color::White;
+ //   sf::VertexArray wallLine2(sf::Lines,2);
+ //   wallLine2[0].position = sf::Vector2f(650, 650);
+ //   wallLine2[1].position = sf::Vector2f(350, 650);
+ //   wallLine2[0].color = sf::Color::White;
+ //   wallLine2[1].color = sf::Color::White;
 
 
-    walls.push_back(Wall(650, 650, 350, 650));
-    wallShapes.push_back(wallLine2);
+ //   walls.push_back(Wall(650, 650, 350, 650));
+ //   wallShapes.push_back(wallLine2);
 
-	sf::VertexArray wallLine3(sf::Lines, 2);
-	wallLine3[0].position = sf::Vector2f(350, 150);
-	wallLine3[1].position = sf::Vector2f(550, 450);
-	wallLine3[0].color = sf::Color::White;
-	wallLine3[1].color = sf::Color::White;
+	//sf::VertexArray wallLine3(sf::Lines, 2);
+	//wallLine3[0].position = sf::Vector2f(350, 150);
+	//wallLine3[1].position = sf::Vector2f(550, 450);
+	//wallLine3[0].color = sf::Color::White;
+	//wallLine3[1].color = sf::Color::White;
 
-	walls.push_back(Wall(350, 150, 550, 450));
-	wallShapes.push_back(wallLine3);
+	//walls.push_back(Wall(350, 150, 550, 450));
+	//wallShapes.push_back(wallLine3);
+    
+    // SAMPLE PARTICLES
+ //   for (int i = 0; i < numInitParticles; i++) {
+	//	//particles.push_back(Particle(i, 100, 100, i, 5));
+ //       particles.push_back(Particle(i, rand() % 1280, rand() % 720, rand() % 360, 5));
+	//	particleShapes.push_back(sf::CircleShape(4, 10));
+	//	particleShapes.at(i).setPosition(particles.at(i).getPosX(), particles.at(i).getPosY());
+	//	particleShapes.at(i).setFillColor(sf::Color::Red);
+	//	particleCount++;
+	//}
+
+	std::vector<std::thread> threads;
+
+	for (int i = 0; i < numThreads; ++i) {
+		threads.emplace_back(updateParticles, std::ref(particles), std::ref(particleShapes), std::ref(walls));
+	}
+
 
     sf::Clock deltaClock;
-
 
     // Main loop
     while (mainWindow.isOpen())
@@ -133,6 +179,8 @@ int main()
                 particleCount++;
             }
 
+            cv.notify_all();
+
         }
 
         ImGui::Text("");
@@ -166,6 +214,8 @@ int main()
 				particleShapes.at(i).setFillColor(sf::Color::Red);
 				particleCount++;
 			}
+
+            cv.notify_all();
         
         }
 
@@ -206,11 +256,15 @@ int main()
 				particleShapes.at(i).setFillColor(sf::Color::Red);
 				particleCount++;
 			}
+
+            cv.notify_all();
         }
 
         if (ImGui::Button("Clear Balls"))
         {
             particleCount = 0;
+            particles.clear();
+            particleShapes.clear();
             //clear array of balls
         }
 
@@ -252,15 +306,24 @@ int main()
             mainWindow.draw(wall);
         }
 
-        for (int i = 0; i < particleCount; i++) {
+        /*for (int i = 0; i < particleCount; i++) {
             particles.at(i).checkCollision(walls);
 
             particles.at(i).updateParticlePosition();
             particleShapes.at(i).setPosition(particles.at(i).getPosX(), particles.at(i).getPosY());
-        }
-
-        for (int i = 0; i < particleShapes.size(); i++) {
-            mainWindow.draw(particleShapes[i]);
+        }*/
+    
+        if (particleShapes.size() > 0) {
+            std::unique_lock lock(mtx);
+            cv.wait(lock, [] { return readyToRender; });
+            for (int i = 0; i < particleShapes.size(); i++) {
+                mainWindow.draw(particleShapes[i]);
+            }
+            readyToCompute = true;
+            readyToRender = false;
+            currentParticle = 0;
+            cv.notify_all();
+            lock.unlock();
         }
 
         fps.update();
@@ -278,6 +341,10 @@ int main()
         // Display the contents of the main window
         mainWindow.display();
     }
+
+	for (auto& thread : threads) {
+		thread.join();
+	}
 
     ImGui::SFML::Shutdown();
 
