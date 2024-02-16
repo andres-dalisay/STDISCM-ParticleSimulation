@@ -203,7 +203,7 @@ int main()
         {
             std::cout << "CASE2: Adding " << numberParticles << " particles at " << startX2 << ", " << startY2 << " with velocity " << velocity2 << " and angle " << angleStart << " to " << angleEnd << std::endl;
             float interval = 0;
-            if (numberParticles >1) interval = (angleEnd - angleStart) / (numberParticles - 1);
+            if (numberParticles >1) interval = (angleEnd - angleStart) / (numberParticles);
                 
             std::cout << interval;
 
