@@ -6,7 +6,7 @@
 ## About this project
 This is a particle simulator built using C++ using the SFML and Dear ImGui libraries. This program was given to us as a multithreading task for our STDISCM Problem Set. This is developed on Visual Studio 2022 on a Windows computer.
 
-# Features
+## Features
 * Add particles with specified positions, angles, and velocities
 * Add walls which particles can collide and bounce off of
 
