@@ -99,7 +99,7 @@ int main()
 
 	walls.push_back(Wall(350, 150, 550, 450));
 	wallShapes.push_back(wallLine3);
-    
+
     // SAMPLE PARTICLES
     for (int i = 0; i < numInitParticles; i++) {
 		//particles.push_back(Particle(i, 100, 100, i, 5));
