@@ -72,43 +72,43 @@ int main()
     std::vector<sf::VertexArray> wallShapes;
 
     // SAMPLE WALLS
- //   sf::VertexArray wallLine(sf::Lines, 2);
- //   wallLine[0].position = sf::Vector2f(300, 100);
- //   wallLine[1].position = sf::Vector2f(300, 300);
- //   wallLine[0].color = sf::Color::White;
- //   wallLine[1].color = sf::Color::White;
+    /*sf::VertexArray wallLine(sf::Lines, 2);
+    wallLine[0].position = sf::Vector2f(300, 100);
+    wallLine[1].position = sf::Vector2f(300, 300);
+    wallLine[0].color = sf::Color::White;
+    wallLine[1].color = sf::Color::White;
 
- //   walls.push_back(Wall(300, 100, 300, 300));
- //   wallShapes.push_back(wallLine);
+    walls.push_back(Wall(300, 100, 300, 300));
+    wallShapes.push_back(wallLine);
 
- //   sf::VertexArray wallLine2(sf::Lines,2);
- //   wallLine2[0].position = sf::Vector2f(650, 650);
- //   wallLine2[1].position = sf::Vector2f(350, 650);
- //   wallLine2[0].color = sf::Color::White;
- //   wallLine2[1].color = sf::Color::White;
+    sf::VertexArray wallLine2(sf::Lines,2);
+    wallLine2[0].position = sf::Vector2f(650, 650);
+    wallLine2[1].position = sf::Vector2f(350, 650);
+    wallLine2[0].color = sf::Color::White;
+    wallLine2[1].color = sf::Color::White;
 
 
- //   walls.push_back(Wall(650, 650, 350, 650));
- //   wallShapes.push_back(wallLine2);
+    walls.push_back(Wall(650, 650, 350, 650));
+    wallShapes.push_back(wallLine2);
 
-	//sf::VertexArray wallLine3(sf::Lines, 2);
-	//wallLine3[0].position = sf::Vector2f(350, 150);
-	//wallLine3[1].position = sf::Vector2f(550, 450);
-	//wallLine3[0].color = sf::Color::White;
-	//wallLine3[1].color = sf::Color::White;
+	sf::VertexArray wallLine3(sf::Lines, 2);
+	wallLine3[0].position = sf::Vector2f(350, 150);
+	wallLine3[1].position = sf::Vector2f(550, 450);
+	wallLine3[0].color = sf::Color::White;
+	wallLine3[1].color = sf::Color::White;
 
-	//walls.push_back(Wall(350, 150, 550, 450));
-	//wallShapes.push_back(wallLine3);
+	walls.push_back(Wall(350, 150, 550, 450));
+	wallShapes.push_back(wallLine3);
     
     // SAMPLE PARTICLES
- //   for (int i = 0; i < numInitParticles; i++) {
-	//	//particles.push_back(Particle(i, 100, 100, i, 5));
- //       particles.push_back(Particle(i, rand() % 1280, rand() % 720, rand() % 360, 5));
-	//	particleShapes.push_back(sf::CircleShape(4, 10));
-	//	particleShapes.at(i).setPosition(particles.at(i).getPosX(), particles.at(i).getPosY());
-	//	particleShapes.at(i).setFillColor(sf::Color::Red);
-	//	particleCount++;
-	//}
+    for (int i = 0; i < numInitParticles; i++) {
+		//particles.push_back(Particle(i, 100, 100, i, 5));
+        particles.push_back(Particle(i, rand() % 1280, rand() % 720, rand() % 360, 5));
+		particleShapes.push_back(sf::CircleShape(4, 10));
+		particleShapes.at(i).setPosition(particles.at(i).getPosX(), particles.at(i).getPosY());
+		particleShapes.at(i).setFillColor(sf::Color::Red);
+		particleCount++;
+	}*/
 
 	std::vector<std::thread> threads;
 
@@ -152,27 +152,27 @@ int main()
         static int startY = 0;
         static int endX = 0;
         static int endY = 0;
-        static float velocity = 0;
+        static float speed = 0;
         static float angle = 0;
 
         ImGui::InputInt("Start X1", &startX);
         ImGui::InputInt("Start Y1", &startY);
         ImGui::InputInt("End X1", &endX);
 		ImGui::InputInt("End Y1", &endY);
-        ImGui::SliderFloat("Velocity 1", &velocity, 0, 11);
+        ImGui::SliderFloat("Speed 1", &speed, 0, 11);
         ImGui::InputFloat("Angle 1", &angle);
         
         //imgui button input
         if (ImGui::Button("Add Case 1"))
         {
-			std::cout << "CASE1: Adding " << numberParticles << " particles at " << startX << ", " << startY << " with velocity " << velocity << " and angle " << angle << std::endl;
+			std::cout << "CASE1: Adding " << numberParticles << " particles at " << startX << ", " << startY << " with speed " << speed << " and angle " << angle << std::endl;
             float distance = sqrt(pow(endX - startX, 2) + pow(endY - startY, 2));
             float interval = 0;
             if (numberParticles == 1) interval = 0;
             else interval = distance / (numberParticles - 1);
             
             for(int i = 0; i < numberParticles; i++){
-				particles.push_back(Particle(i, startX + interval * i, startY + interval*i, angle, velocity));
+				particles.push_back(Particle(i, startX + interval * i, startY + interval*i, angle, speed));
 				particleShapes.push_back(sf::CircleShape(4, 10));
 				particleShapes.at(i).setPosition(particles.at(i).getPosX(), particles.at(i).getPosY());
 				particleShapes.at(i).setFillColor(sf::Color::Red);
@@ -188,28 +188,27 @@ int main()
 
         static int startX2 = 0;
         static int startY2 = 0;
-        static float velocity2 = 0;
+        static float speed2 = 0;
         static float angleStart = 0;
         static float angleEnd = 0;
 
         ImGui::InputInt("Start X2", &startX2);
         ImGui::InputInt("Start Y2", &startY2);
-        /*ImGui::InputFloat("Velocity 2", &velocity2);*/
-        ImGui::SliderFloat("Velocity 2", &velocity2, 0, 11);
+        ImGui::SliderFloat("Speed 2", &speed2, 0, 11);
         ImGui::InputFloat("Angle Start", &angleStart);
         ImGui::InputFloat("Angle End", &angleEnd);
 
         //imgui button input
         if (ImGui::Button("Add Case 2"))
         {
-            std::cout << "CASE2: Adding " << numberParticles << " particles at " << startX2 << ", " << startY2 << " with velocity " << velocity2 << " and angle " << angleStart << " to " << angleEnd << std::endl;
+            std::cout << "CASE2: Adding " << numberParticles << " particles at " << startX2 << ", " << startY2 << " with speed " << speed2 << " and angle " << angleStart << " to " << angleEnd << std::endl;
             float interval = 0;
             if (numberParticles >1) interval = (angleEnd - angleStart) / (numberParticles);
                 
             std::cout << interval;
 
 			for (int i = 0; i < numberParticles; i++) {
-				particles.push_back(Particle(i, startX2, startY2, angleStart+(interval*i), velocity2));
+				particles.push_back(Particle(i, startX2, startY2, angleStart+(interval*i), speed2));
 				particleShapes.push_back(sf::CircleShape(4, 10));
 				particleShapes.at(i).setPosition(particles.at(i).getPosX(), particles.at(i).getPosY());
 				particleShapes.at(i).setFillColor(sf::Color::Red);
@@ -226,34 +225,33 @@ int main()
         static int startX3 = 0;
         static int startY3 = 0;
         static float angle3 = 0;
-        static float velocityStart = 0;
-        static float velocityEnd = 0;
+        static float speedStart = 0;
+        static float speedEnd = 0;
 
         ImGui::InputInt("Start X3", &startX3);
         ImGui::InputInt("Start Y3", &startY3);
         ImGui::InputFloat("Angle 3", &angle3);
-        ImGui::SliderFloat("Velocity Start", &velocityStart, 0, 12);
-        ImGui::SliderFloat("Velocity End", &velocityEnd, 0, 12);
+        ImGui::SliderFloat("Speed Start", &speedStart, 0, 12);
+        ImGui::SliderFloat("Speed End", &speedEnd, 0, 12);
         
         
 
         //imgui button input
         if (ImGui::Button("Add Case 3"))
         {
-			std::cout << "CASE3: Adding " << numberParticles << " particles at " << startX3 << ", " << startY3 << " with angle " << angle3 << " and velocity " << velocityStart << " to " << velocityEnd << std::endl;
+			std::cout << "CASE3: Adding " << numberParticles << " particles at " << startX3 << ", " << startY3 << " with angle " << angle3 << " and speed " << speedStart << " to " << speedEnd << std::endl;
 		    
 			float interval = 0;
             if (numberParticles > 1) {
-                interval = (velocityEnd - velocityStart) / (numberParticles - 1);
+                interval = (speedEnd - speedStart) / (numberParticles - 1);
             }
                 
 
 			std::cout << interval;
 
 			for (int i = 0; i < numberParticles; i++) {
-                //std::cout << "Velocity: " << velocityStart + (interval * i) << " | Angle: " << angle3 << std::endl;
-                std::cout << "velocityStart: " << velocityStart << " | interval: " << interval << " | i: " << i << " | velocity: " << velocityStart + (interval * i) << std::endl;  
-				particles.push_back(Particle(i, startX3, startY3, angle3, velocityStart + (interval * i)));
+                std::cout << "speedStart: " << speedStart << " | interval: " << interval << " | i: " << i << " | speed: " << speedStart + (interval * i) << std::endl;  
+				particles.push_back(Particle(i, startX3, startY3, angle3, speedStart + (interval * i)));
 				particleShapes.push_back(sf::CircleShape(4, 10));
 				particleShapes.at(i).setPosition(particles.at(i).getPosX(), particles.at(i).getPosY());
 				particleShapes.at(i).setFillColor(sf::Color::Red);
@@ -314,13 +312,6 @@ int main()
         for (auto& wall : wallShapes) {
             mainWindow.draw(wall);
         }
-
-        /*for (int i = 0; i < particleCount; i++) {
-            particles.at(i).checkCollision(walls);
-
-            particles.at(i).updateParticlePosition();
-            particleShapes.at(i).setPosition(particles.at(i).getPosX(), particles.at(i).getPosY());
-        }*/
     
         if (particleShapes.size() > 0) {
             std::unique_lock lock(mtx);
